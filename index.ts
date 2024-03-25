@@ -31,3 +31,18 @@ const invertTree = (root: TreeNode | null): TreeNode | null => {
 
   return root;
 }
+
+/**
+ * 1480. Running Sum of 1d Array
+ */
+function runningSum(nums: number[]): number[] {
+  let prev = nums[0]
+
+  for (let i = 1; i < nums.length; i++) {
+    const sum = nums[i] + prev
+    nums[i] = sum
+    prev = sum
+  }
+
+  return nums
+};
