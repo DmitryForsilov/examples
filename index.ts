@@ -2,6 +2,8 @@
  * LEETCODE stuff
  */
 
+import * as assert from 'assert';
+
 /**
  * 226. Invert Binary Tree
  */
@@ -36,13 +38,12 @@ const invertTree = (root: TreeNode | null): TreeNode | null => {
  * 1480. Running Sum of 1d Array
  */
 function runningSum(nums: number[]): number[] {
-  let prev = nums[0]
-
   for (let i = 1; i < nums.length; i++) {
-    const sum = nums[i] + prev
-    nums[i] = sum
-    prev = sum
+    nums[i] += nums[i - 1];
   }
 
   return nums
-};
+}
+assert.deepStrictEqual(runningSum([1,2,3,4]), [1,3,6,10]);
+assert.deepStrictEqual(runningSum([1,1,1,1,1]), [1,2,3,4,5]);
+assert.deepStrictEqual(runningSum([3,1,2,10,1]), [3,4,6,16,17]);
