@@ -13,12 +13,12 @@ import * as assert from 'assert';
 //   left: TreeNode | null
 //   right: TreeNode | null
 // }
+
+// TODO write this function
+// const generateTree = (values: [number]): TreeNode | null => {
 //
-// // TODO write this function
-// // const generateTree = (values: [number]): TreeNode | null => {
-// //
-// // }
-//
+// }
+
 // const invertTree = (root: TreeNode | null): TreeNode | null => {
 //   if (!root) {
 //     return root
@@ -32,8 +32,8 @@ import * as assert from 'assert';
 //   invertTree(root.right)
 //
 //   return root;
-// Time complexity = O(n)
-// Space complexity = O(1)
+// // Time complexity = O(n)
+// // Space complexity = O(1)
 // }
 
 /**
@@ -45,13 +45,12 @@ import * as assert from 'assert';
 //   }
 //
 //   return nums
-// Time complexity = O(n)
-// Space complexity = O(1)
+// // Time complexity = O(n)
+// // Space complexity = O(1)
 // }
 // assert.deepStrictEqual(runningSum([1,2,3,4]), [1,3,6,10]);
 // assert.deepStrictEqual(runningSum([1,1,1,1,1]), [1,2,3,4,5]);
 // assert.deepStrictEqual(runningSum([3,1,2,10,1]), [3,4,6,16,17]);
-
 
 /**
  * 1672. Richest Customer Wealth
@@ -95,10 +94,10 @@ import * as assert from 'assert';
 //   }
 //
 //   return maxWealth
-// Time complexity = O(n * m)
-// Space complexity = O(1)
+// // Time complexity = O(n * m)
+// // Space complexity = O(1)
 // }
-//
+
 // assert.equal(maximumWealth([[1,2,3],[3,2,1]]), 6)
 // assert.equal(maximumWealth([[1,5],[7,3],[3,5]]), 10)
 // assert.equal(maximumWealth([[2,8,7],[7,1,3],[1,9,5]]), 17)
