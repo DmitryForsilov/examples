@@ -32,6 +32,8 @@ import * as assert from 'assert';
 //   invertTree(root.right)
 //
 //   return root;
+// Time complexity = O(n)
+// Space complexity = O(1)
 // }
 
 /**
@@ -43,6 +45,8 @@ import * as assert from 'assert';
 //   }
 //
 //   return nums
+// Time complexity = O(n)
+// Space complexity = O(1)
 // }
 // assert.deepStrictEqual(runningSum([1,2,3,4]), [1,3,6,10]);
 // assert.deepStrictEqual(runningSum([1,1,1,1,1]), [1,2,3,4,5]);
@@ -73,6 +77,8 @@ import * as assert from 'assert';
 //   }
 //
 //   return result
+// Time complexity = O(n * m)
+// Space complexity = O(n)
 // }
 // b)
 // function maximumWealth(accounts: number[][]): number {
@@ -89,6 +95,8 @@ import * as assert from 'assert';
 //   }
 //
 //   return maxWealth
+// Time complexity = O(n * m)
+// Space complexity = O(1)
 // }
 //
 // assert.equal(maximumWealth([[1,2,3],[3,2,1]]), 6)
@@ -117,6 +125,8 @@ import * as assert from 'assert';
 //   }
 //
 //   return results
+// Time complexity = O(n)
+// Space complexity = O(1)
 // }
 
 // b)
@@ -142,8 +152,57 @@ import * as assert from 'assert';
 //   }
 //
 //   return results
+// Time complexity = O(n)
+// Space complexity = O(1)
 // }
 
 // assert.deepStrictEqual(fizzBuzz(3), ["1","2","Fizz"])
 // assert.deepStrictEqual(fizzBuzz(5), ["1","2","Fizz","4","Buzz"])
 // assert.deepStrictEqual(fizzBuzz(15), ["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"])
+
+/**
+ * 1342. Number of Steps to Reduce a Number to Zero
+ */
+// a)
+// function numberOfSteps(num: number): number {
+//   let currentNum = num
+//   let steps = 0
+//
+//   while (currentNum !== 0) {
+//     if (currentNum % 2 === 0) {
+//       currentNum /= 2
+//     } else {
+//       currentNum -= 1
+//     }
+//
+//     steps += 1
+//   }
+//
+//   return steps
+//   // Time complexity = O(logn)
+//   // Space complexity = O(1)
+// }
+
+// b)
+// function numberOfSteps(num: number): number {
+//   let currentNum = num
+//   let steps = 0
+//
+//   while (currentNum !== 0) {
+//     if ((currentNum & 1) === 0) {
+//       currentNum >>= 1
+//     } else {
+//       currentNum -= 1
+//     }
+//
+//     steps += 1
+//   }
+//
+//   return steps
+//   // Time complexity = O(logn)
+//   // Space complexity = O(1)
+// }
+
+// assert.equal(numberOfSteps(14), 6)
+// assert.equal(numberOfSteps(8), 4)
+// assert.equal(numberOfSteps(123), 12)
