@@ -205,3 +205,70 @@ import * as assert from 'assert';
 // assert.equal(numberOfSteps(14), 6)
 // assert.equal(numberOfSteps(8), 4)
 // assert.equal(numberOfSteps(123), 12)
+
+/**
+ * 876. Middle of the Linked List
+ */
+type ListNode = {
+  val: number;
+  next: ListNode | null;
+};
+
+const generateLinkedList = (nums: number[]) => {
+  if (!nums.length) {
+    return null;
+  }
+
+  const root: ListNode = {
+    val: nums[0],
+    next: null,
+  };
+  let currentNode = root;
+
+  for (let i = 1; i < nums.length; i++) {
+    currentNode.next = {
+      val: nums[i],
+      next: null,
+    };
+    currentNode = currentNode.next;
+  }
+
+  return root;
+};
+// a)
+function middleNode(head: ListNode | null): ListNode | null {
+  let listLength = 1;
+  let currentNode = head;
+
+  while (currentNode?.next) {
+    listLength += 1;
+    currentNode = currentNode.next;
+  }
+
+  const guessStepsToMiddle = listLength / 2;
+  const correctStepsToMiddle =
+    guessStepsToMiddle % 1 === 0
+      ? guessStepsToMiddle + 1
+      : Math.round(guessStepsToMiddle);
+
+  let steps = 1;
+  let middleNode = head;
+
+  while (correctStepsToMiddle > steps) {
+    middleNode = middleNode?.next || null;
+    steps += 1;
+  }
+
+  return middleNode;
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+}
+
+assert.deepStrictEqual(
+  middleNode(generateLinkedList([1, 2, 3, 4, 5])),
+  generateLinkedList([3, 4, 5]),
+);
+assert.deepStrictEqual(
+  middleNode(generateLinkedList([1, 2, 3, 4, 5, 6])),
+  generateLinkedList([4, 5, 6]),
+);
