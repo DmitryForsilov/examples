@@ -75,22 +75,75 @@ import * as assert from 'assert';
 //   return result
 // }
 // b)
-function maximumWealth(accounts: number[][]): number {
-  let maxWealth = 0
+// function maximumWealth(accounts: number[][]): number {
+//   let maxWealth = 0
+//
+//   for (let i = 0; i < accounts.length; i++) {
+//     let accountWealth = 0
+//
+//     for (let j = 0; j < accounts[i].length; j++) {
+//       accountWealth += accounts[i][j]
+//     }
+//
+//     maxWealth = Math.max(maxWealth, accountWealth)
+//   }
+//
+//   return maxWealth
+// }
+//
+// assert.equal(maximumWealth([[1,2,3],[3,2,1]]), 6)
+// assert.equal(maximumWealth([[1,5],[7,3],[3,5]]), 10)
+// assert.equal(maximumWealth([[2,8,7],[7,1,3],[1,9,5]]), 17)
 
-  for (let i = 0; i < accounts.length; i++) {
-    let accountWealth = 0
+/**
+ * 412. Fizz Buzz
+ */
+// a)
+// function fizzBuzz(n: number): string[] {
+//   const results = []
+//   for (let i = 1; i <= n; i++) {
+//     const isDivisibleBy3 = i % 3 === 0
+//     const isDivisibleBy5 = i % 5 === 0
+//
+//     if (isDivisibleBy3 && isDivisibleBy5) {
+//       results.push("FizzBuzz")
+//     } else if (isDivisibleBy3) {
+//       results.push("Fizz")
+//     } else if (isDivisibleBy5) {
+//       results.push("Buzz")
+//     } else {
+//       results.push(i.toString())
+//     }
+//   }
+//
+//   return results
+// }
 
-    for (let j = 0; j < accounts[i].length; j++) {
-      accountWealth += accounts[i][j]
-    }
+// b)
+// function fizzBuzz(n: number): string[] {
+//   const results = []
+//
+//   for (let i = 1; i <= n; i++) {
+//     const isDivisibleBy3 = i % 3 === 0
+//     const isDivisibleBy5 = i % 5 === 0
+//     let currStr = ''
+//
+//     if (isDivisibleBy3) {
+//       currStr += "Fizz"
+//     }
+//     if (isDivisibleBy5) {
+//       currStr += "Buzz"
+//     }
+//     if (!currStr.length) {
+//       currStr += i.toString()
+//     }
+//
+//     results.push(currStr)
+//   }
+//
+//   return results
+// }
 
-    maxWealth = Math.max(maxWealth, accountWealth)
-  }
-
-  return maxWealth
-}
-
-assert.equal(maximumWealth([[1,2,3],[3,2,1]]), 6)
-assert.equal(maximumWealth([[1,5],[7,3],[3,5]]), 10)
-assert.equal(maximumWealth([[2,8,7],[7,1,3],[1,9,5]]), 17)
+// assert.deepStrictEqual(fizzBuzz(3), ["1","2","Fizz"])
+// assert.deepStrictEqual(fizzBuzz(5), ["1","2","Fizz","4","Buzz"])
+// assert.deepStrictEqual(fizzBuzz(15), ["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"])
