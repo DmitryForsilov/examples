@@ -370,9 +370,32 @@ import * as assert from 'assert';
 //   });
 //
 //   return maxConsecutive;
+//   // Time complexity = O(n)
+//   // Space complexity = O(1)
 // }
+
+// assert.equal(findMaxConsecutiveOnes([1, 1, 0, 1, 1, 1]), 3);
+// assert.equal(findMaxConsecutiveOnes([1, 0, 1, 1, 0, 1]), 2);
+// assert.equal(findMaxConsecutiveOnes([0, 0, 0, 0, 0, 0]), 0);
+// assert.equal(findMaxConsecutiveOnes([1, 1, 1, 1, 1, 1]), 6);
+
+/**
+ * Find Numbers with Even Number of Digits
+ */
+// function findNumbers(nums: number[]): number {
+//   let count = 0;
 //
-// assert.equal(findMaxConsecutiveOnes([1,1,0,1,1,1]), 3)
-// assert.equal(findMaxConsecutiveOnes([1,0,1,1,0,1]), 2)
-// assert.equal(findMaxConsecutiveOnes([0,0,0,0,0,0]), 0)
-// assert.equal(findMaxConsecutiveOnes([1,1,1,1,1,1]), 6)
+//   nums.forEach((num) => {
+//     // Divide the number by 10 again and again to get the number of digits for example
+//     if (num.toString().length % 2 === 0) {
+//       count += 1;
+//     }
+//   });
+//
+//   return count;
+//   // Time complexity = O(n)
+//   // Space complexity = O(1)
+// }
+
+// assert.equal(findNumbers([12, 345, 2, 6, 7896]), 2);
+// assert.equal(findNumbers([555, 901, 482, 1771]), 1);
