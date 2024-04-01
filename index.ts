@@ -348,3 +348,31 @@ import * as assert from 'assert';
 // assert.strictEqual(canConstruct('a', 'b'), false);
 // assert.strictEqual(canConstruct('aa', 'ab'), false);
 // assert.strictEqual(canConstruct('aa', 'aab'), true);
+
+/**
+ * Max Consecutive Ones
+ */
+// function findMaxConsecutiveOnes(nums: number[]): number {
+//   let maxConsecutive = 0;
+//   let currentConsecutive = 0;
+//
+//   nums.forEach((num, i) => {
+//     if (num === 1) {
+//       currentConsecutive += 1;
+//     }
+//     if (num === 0 || i === nums.length - 1) {
+//       maxConsecutive =
+//         currentConsecutive > maxConsecutive
+//           ? currentConsecutive
+//           : maxConsecutive;
+//       currentConsecutive = 0;
+//     }
+//   });
+//
+//   return maxConsecutive;
+// }
+//
+// assert.equal(findMaxConsecutiveOnes([1,1,0,1,1,1]), 3)
+// assert.equal(findMaxConsecutiveOnes([1,0,1,1,0,1]), 2)
+// assert.equal(findMaxConsecutiveOnes([0,0,0,0,0,0]), 0)
+// assert.equal(findMaxConsecutiveOnes([1,1,1,1,1,1]), 6)
