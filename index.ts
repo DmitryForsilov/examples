@@ -313,3 +313,38 @@ import * as assert from 'assert';
 //   middleNode(generateLinkedList([1, 2, 3, 4, 5, 6])),
 //   generateLinkedList([4, 5, 6]),
 // );
+
+/**
+ * 383. Ransom Note
+ */
+// function canConstruct(ransomNote: string, magazine: string): boolean {
+//   const hashTable: { [key: string]: number } = {};
+//
+//   for (let i = 0; i < magazine.length; i++) {
+//     const char = magazine[i];
+//
+//     if (hashTable[char] !== undefined) {
+//       hashTable[char] += 1;
+//     } else {
+//       hashTable[char] = 1;
+//     }
+//   }
+//
+//   for (let i = 0; i < ransomNote.length; i++) {
+//     const char = ransomNote[i];
+//
+//     if (!hashTable[char]) {
+//       return false;
+//     }
+//
+//     hashTable[char] -= 1;
+//   }
+//
+//   return true;
+//   // Time complexity = O(m) // magazine is bigger string
+//   // Space complexity = O(k) // k < 26 in english, could be O(1)
+// }
+
+// assert.strictEqual(canConstruct('a', 'b'), false);
+// assert.strictEqual(canConstruct('aa', 'ab'), false);
+// assert.strictEqual(canConstruct('aa', 'aab'), true);
