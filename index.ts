@@ -209,66 +209,107 @@ import * as assert from 'assert';
 /**
  * 876. Middle of the Linked List
  */
-type ListNode = {
-  val: number;
-  next: ListNode | null;
-};
+// type ListNode = {
+//   val: number;
+//   next: ListNode | null;
+// };
 
-const generateLinkedList = (nums: number[]) => {
-  if (!nums.length) {
-    return null;
-  }
-
-  const root: ListNode = {
-    val: nums[0],
-    next: null,
-  };
-  let currentNode = root;
-
-  for (let i = 1; i < nums.length; i++) {
-    currentNode.next = {
-      val: nums[i],
-      next: null,
-    };
-    currentNode = currentNode.next;
-  }
-
-  return root;
-};
+// const generateLinkedList = (nums: number[]) => {
+//   if (!nums.length) {
+//     return null;
+//   }
+//
+//   const root: ListNode = {
+//     val: nums[0],
+//     next: null,
+//   };
+//   let currentNode = root;
+//
+//   for (let i = 1; i < nums.length; i++) {
+//     currentNode.next = {
+//       val: nums[i],
+//       next: null,
+//     };
+//     currentNode = currentNode.next;
+//   }
+//
+//   return root;
+// };
 // a)
-function middleNode(head: ListNode | null): ListNode | null {
-  let listLength = 1;
-  let currentNode = head;
+// function middleNode(head: ListNode | null): ListNode | null {
+//   let listLength = 1;
+//   let currentNode = head;
+//
+//   while (currentNode?.next) {
+//     listLength += 1;
+//     currentNode = currentNode.next;
+//   }
+//
+//   const guessStepsToMiddle = listLength / 2;
+//   const correctStepsToMiddle =
+//     guessStepsToMiddle % 1 === 0
+//       ? guessStepsToMiddle + 1
+//       : Math.round(guessStepsToMiddle);
+//
+//   let steps = 1;
+//   let middleNode = head;
+//
+//   while (correctStepsToMiddle > steps) {
+//     middleNode = middleNode?.next || null;
+//     steps += 1;
+//   }
+//
+//   return middleNode;
+//   // Time complexity = O(n)
+//   // Space complexity = O(1)
+// }
 
-  while (currentNode?.next) {
-    listLength += 1;
-    currentNode = currentNode.next;
-  }
+// b)
+// function middleNode(head: ListNode | null): ListNode | null {
+//   const nodes = [];
+//
+//   let currentNode = head;
+//   let length = 0;
+//
+//   while (currentNode) {
+//     nodes.push(currentNode);
+//     currentNode = currentNode.next;
+//     length += 1;
+//   }
+//
+//   const middleIndex = (() => {
+//     const rawIndex = length % 2 === 0
+//       ? length / 2 + 1
+//       : Math.round(length / 2)
+//
+//     return rawIndex - 1; // length - 1
+//   })();
+//
+//   return nodes[middleIndex];
+//   // Time complexity = O(n)
+//   // Space complexity = O(n)
+// }
 
-  const guessStepsToMiddle = listLength / 2;
-  const correctStepsToMiddle =
-    guessStepsToMiddle % 1 === 0
-      ? guessStepsToMiddle + 1
-      : Math.round(guessStepsToMiddle);
+// c)
+// function middleNode(head: ListNode | null): ListNode | null {
+//   let middle = head;
+//   let end = head;
+//
+//   while (middle?.next && end?.next) {
+//     middle = middle.next;
+//     end = end.next.next;
+//   }
+//
+//   return middle;
+//   // Time complexity = O(n)
+//   // Space complexity = O(1)
+// }
 
-  let steps = 1;
-  let middleNode = head;
-
-  while (correctStepsToMiddle > steps) {
-    middleNode = middleNode?.next || null;
-    steps += 1;
-  }
-
-  return middleNode;
-  // Time complexity = O(n)
-  // Space complexity = O(1)
-}
-
-assert.deepStrictEqual(
-  middleNode(generateLinkedList([1, 2, 3, 4, 5])),
-  generateLinkedList([3, 4, 5]),
-);
-assert.deepStrictEqual(
-  middleNode(generateLinkedList([1, 2, 3, 4, 5, 6])),
-  generateLinkedList([4, 5, 6]),
-);
+// assert.deepStrictEqual(
+//   middleNode(generateLinkedList([1, 2, 3, 4, 5])),
+//   generateLinkedList([3, 4, 5]),
+// );
+// assert.deepStrictEqual(
+//   middleNode(generateLinkedList([1, 2, 3, 4, 5, 6])),
+//   generateLinkedList([4, 5, 6]),
+// );
