@@ -399,3 +399,39 @@ import * as assert from 'assert';
 
 // assert.equal(findNumbers([12, 345, 2, 6, 7896]), 2);
 // assert.equal(findNumbers([555, 901, 482, 1771]), 1);
+
+/**
+ * Squares of a Sorted Array
+ */
+// a)
+function sortedSquaresA(nums: number[]): number[] {
+  return nums.map((num) => num * num).sort((a, b) => a - b);
+  // Time complexity = O(n^2) / O(logn)
+  // Space complexity = O(1)
+}
+assert.deepStrictEqual(sortedSquaresA([-4, -1, 0, 3, 10]), [0, 1, 9, 16, 100]);
+assert.deepStrictEqual(sortedSquaresA([-7, -3, 2, 3, 11]), [4, 9, 9, 49, 121]);
+
+// b)
+function sortedSquaresB(nums: number[]): number[] {
+  const sortedSquares = [];
+
+  let start = 0;
+  let end = nums.length - 1;
+
+  for (let i = nums.length - 1; i >= 0; i--) {
+    if (Math.abs(nums[start]) >= Math.abs(nums[end])) {
+      sortedSquares[i] = nums[start] * nums[start];
+      start += 1;
+    } else {
+      sortedSquares[i] = nums[end] * nums[end];
+      end -= 1;
+    }
+  }
+  return sortedSquares;
+  // Time complexity = O(n)
+  // Space complexity = O(n)
+}
+
+assert.deepStrictEqual(sortedSquaresB([-4, -1, 0, 3, 10]), [0, 1, 9, 16, 100]);
+assert.deepStrictEqual(sortedSquaresB([-7, -3, 2, 3, 11]), [4, 9, 9, 49, 121]);
