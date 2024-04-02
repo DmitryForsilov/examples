@@ -588,7 +588,8 @@ function duplicateZerosB(arr: number[]): void {
       if (indexToWrite < arr.length) {
         arr[indexToWrite] = arr[currentIndex];
       }
-    } else { // Non-zero, just write it in
+    } else {
+      // Non-zero, just write it in
       if (indexToWrite < arr.length) {
         arr[indexToWrite] = arr[currentIndex];
       }
@@ -612,3 +613,41 @@ assert.deepStrictEqual(arr2B, [1, 2, 3]);
 const arr3B = [0, 0, 0];
 duplicateZerosB(arr3B);
 assert.deepStrictEqual(arr3B, [0, 0, 0]);
+
+/**
+ * Merge Sorted Array
+ */
+function mergeA(nums1: number[], m: number, nums2: number[], n: number): void {
+  let index1 = m - 1;
+  let index2 = n - 1;
+
+  for (let i = m + n - 1; i >= 0; i--) {
+    if (nums1[index1] === undefined) {
+      nums1[i] = nums2[index2];
+      index2 -= 1;
+    } else if (nums2[index2] === undefined) {
+      nums1[i] = nums1[index1];
+      index1 -= 1;
+    } else if (nums1[index1] > nums2[index2]) {
+      nums1[i] = nums1[index1];
+      index1 -= 1;
+    } else {
+      nums1[i] = nums2[index2];
+      index2 -= 1;
+    }
+  }
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+}
+
+const nums11A = [1, 2, 3, 0, 0, 0];
+mergeA(nums11A, 3, [2, 5, 6], 3);
+assert.deepStrictEqual(nums11A, [1, 2, 2, 3, 5, 6]);
+
+const nums12A = [1];
+mergeA(nums12A, 1, [], 0);
+assert.deepStrictEqual(nums12A, [1]);
+
+const nums13A = [0];
+mergeA(nums13A, 0, [1], 1);
+assert.deepStrictEqual(nums13A, [1]);
