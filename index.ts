@@ -526,3 +526,89 @@ function sortedSquaresB(nums: number[]): number[] {
 
 assert.deepStrictEqual(sortedSquaresB([-4, -1, 0, 3, 10]), [0, 1, 9, 16, 100]);
 assert.deepStrictEqual(sortedSquaresB([-7, -3, 2, 3, 11]), [4, 9, 9, 49, 121]);
+
+/**
+ * Duplicate Zeros
+ */
+// a)
+function duplicateZerosA(arr: number[]): void {
+  let i = 0;
+
+  while (i < arr.length) {
+    if (arr[i] === 0) {
+      for (let j = arr.length - 1; j >= i; j--) {
+        arr[j] = arr[j - 1];
+      }
+
+      arr[i] = 0;
+      i += 2;
+    } else {
+      i += 1;
+    }
+  }
+  // Time complexity = O(n * m)
+  // Space complexity = O(1)
+}
+
+const arr1A = [1, 0, 2, 3, 0, 4, 5, 0];
+duplicateZerosA(arr1A);
+assert.deepStrictEqual(arr1A, [1, 0, 0, 2, 3, 0, 0, 4]);
+
+const arr2A = [1, 2, 3];
+duplicateZerosA(arr2A);
+assert.deepStrictEqual(arr2A, [1, 2, 3]);
+
+const arr3A = [0, 0, 0];
+duplicateZerosA(arr3A);
+assert.deepStrictEqual(arr3A, [0, 0, 0]);
+
+// b)
+function duplicateZerosB(arr: number[]): void {
+  let zerosCount = 0;
+
+  // [1, 0, 2, 3, 0, 4, 5, 0]
+  arr.forEach((num) => {
+    if (num === 0) {
+      zerosCount += 1;
+    }
+  });
+
+  let currentIndex = arr.length - 1;
+  let indexToWrite = arr.length - 1 + zerosCount;
+
+  while (currentIndex >= 0 && indexToWrite >= 0) {
+    if (arr[currentIndex] === 0) {
+      // Zero found, write it in twice if we can
+      if (indexToWrite < arr.length) {
+        arr[indexToWrite] = arr[currentIndex];
+      }
+
+      indexToWrite -= 1;
+
+      if (indexToWrite < arr.length) {
+        arr[indexToWrite] = arr[currentIndex];
+      }
+    } else { // Non-zero, just write it in
+      if (indexToWrite < arr.length) {
+        arr[indexToWrite] = arr[currentIndex];
+      }
+    }
+
+    currentIndex -= 1;
+    indexToWrite -= 1;
+  }
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+}
+
+const arr1B = [1, 0, 2, 3, 0, 4, 5, 0];
+duplicateZerosB(arr1B);
+assert.deepStrictEqual(arr1B, [1, 0, 0, 2, 3, 0, 0, 4]);
+
+const arr2B = [1, 2, 3];
+duplicateZerosB(arr2B);
+assert.deepStrictEqual(arr2B, [1, 2, 3]);
+
+const arr3B = [0, 0, 0];
+duplicateZerosB(arr3B);
+assert.deepStrictEqual(arr3B, [0, 0, 0]);
