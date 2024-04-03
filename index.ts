@@ -651,3 +651,40 @@ assert.deepStrictEqual(nums12A, [1]);
 const nums13A = [0];
 mergeA(nums13A, 0, [1], 1);
 assert.deepStrictEqual(nums13A, [1]);
+
+/**
+ * Remove Element
+ */
+function removeElement(nums: number[], val: number): number {
+  let i = 0;
+  let count = 0;
+
+  while (i < nums.length) {
+    if (nums[i] === val) {
+      for (let j = i; j < nums.length; j++) {
+        nums[j] = nums[j + 1];
+      }
+    } else {
+      if (nums[i] !== undefined) {
+        count += 1;
+      }
+      i += 1;
+    }
+  }
+
+  return count;
+  // Time complexity = O(n^2)
+  // Space complexity = O(1)
+}
+
+const arr1 = [3, 2, 2, 3];
+assert.strictEqual(removeElement(arr1, 3), 2);
+assert.deepStrictEqual(arr1, [2, 2, undefined, undefined]);
+
+const arr2 = [0, 1, 2, 2, 3, 0, 4, 2];
+assert.strictEqual(removeElement(arr2, 2), 5);
+assert.deepStrictEqual(arr2, [0, 1, 3, 0, 4, undefined, undefined, undefined]);
+
+const arr3 = [2];
+assert.strictEqual(removeElement(arr3, 3), 1);
+assert.deepStrictEqual(arr3, [2]);
