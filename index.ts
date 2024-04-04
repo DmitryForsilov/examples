@@ -2,7 +2,8 @@
  * LEETCODE stuff
  */
 
-import * as assert from 'assert';
+import test from 'node:test';
+import { strict as assert } from 'node:assert';
 
 /**
  * 226. Invert Binary Tree
@@ -48,14 +49,16 @@ function runningSum(nums: number[]): number[] {
   // Time complexity = O(n)
   // Space complexity = O(1)
 }
-assert.deepStrictEqual(runningSum([1, 2, 3, 4]), [1, 3, 6, 10]);
-assert.deepStrictEqual(runningSum([1, 1, 1, 1, 1]), [1, 2, 3, 4, 5]);
-assert.deepStrictEqual(runningSum([3, 1, 2, 10, 1]), [3, 4, 6, 16, 17]);
+
+test('1480. Running Sum of 1d Array', () => {
+  assert.deepEqual(runningSum([1, 2, 3, 4]), [1, 3, 6, 10]);
+  assert.deepEqual(runningSum([1, 1, 1, 1, 1]), [1, 2, 3, 4, 5]);
+  assert.deepEqual(runningSum([3, 1, 2, 10, 1]), [3, 4, 6, 16, 17]);
+});
 
 /**
  * 1672. Richest Customer Wealth
  */
-// a)
 function maximumWealthA(accounts: number[][]): number {
   const hashMap: { [key: number]: number } = {};
   for (let i = 0; i < accounts.length; i++) {
@@ -79,31 +82,7 @@ function maximumWealthA(accounts: number[][]): number {
   // Time complexity = O(n * m)
   // Space complexity = O(n)
 }
-assert.equal(
-  maximumWealthA([
-    [1, 2, 3],
-    [3, 2, 1],
-  ]),
-  6,
-);
-assert.equal(
-  maximumWealthA([
-    [1, 5],
-    [7, 3],
-    [3, 5],
-  ]),
-  10,
-);
-assert.equal(
-  maximumWealthA([
-    [2, 8, 7],
-    [7, 1, 3],
-    [1, 9, 5],
-  ]),
-  17,
-);
 
-// b)
 function maximumWealthB(accounts: number[][]): number {
   let maxWealth = 0;
 
@@ -121,34 +100,38 @@ function maximumWealthB(accounts: number[][]): number {
   // Time complexity = O(n * m)
   // Space complexity = O(1)
 }
-assert.equal(
-  maximumWealthB([
-    [1, 2, 3],
-    [3, 2, 1],
-  ]),
-  6,
-);
-assert.equal(
-  maximumWealthB([
-    [1, 5],
-    [7, 3],
-    [3, 5],
-  ]),
-  10,
-);
-assert.equal(
-  maximumWealthB([
-    [2, 8, 7],
-    [7, 1, 3],
-    [1, 9, 5],
-  ]),
-  17,
-);
+
+test('1672. Richest Customer Wealth', () => {
+  [maximumWealthA, maximumWealthB].forEach((func) => {
+    assert.equal(
+      func([
+        [1, 2, 3],
+        [3, 2, 1],
+      ]),
+      6,
+    );
+    assert.equal(
+      func([
+        [1, 5],
+        [7, 3],
+        [3, 5],
+      ]),
+      10,
+    );
+    assert.equal(
+      func([
+        [2, 8, 7],
+        [7, 1, 3],
+        [1, 9, 5],
+      ]),
+      17,
+    );
+  });
+});
 
 /**
  * 412. Fizz Buzz
  */
-// a)
 function fizzBuzzA(n: number): string[] {
   const results = [];
   for (let i = 1; i <= n; i++) {
@@ -170,27 +153,7 @@ function fizzBuzzA(n: number): string[] {
   // Time complexity = O(n)
   // Space complexity = O(1)
 }
-assert.deepStrictEqual(fizzBuzzA(3), ['1', '2', 'Fizz']);
-assert.deepStrictEqual(fizzBuzzA(5), ['1', '2', 'Fizz', '4', 'Buzz']);
-assert.deepStrictEqual(fizzBuzzA(15), [
-  '1',
-  '2',
-  'Fizz',
-  '4',
-  'Buzz',
-  'Fizz',
-  '7',
-  '8',
-  'Fizz',
-  'Buzz',
-  '11',
-  'Fizz',
-  '13',
-  '14',
-  'FizzBuzz',
-]);
 
-// b)
 function fizzBuzzB(n: number): string[] {
   const results = [];
 
@@ -216,30 +179,34 @@ function fizzBuzzB(n: number): string[] {
   // Time complexity = O(n)
   // Space complexity = O(1)
 }
-assert.deepStrictEqual(fizzBuzzB(3), ['1', '2', 'Fizz']);
-assert.deepStrictEqual(fizzBuzzB(5), ['1', '2', 'Fizz', '4', 'Buzz']);
-assert.deepStrictEqual(fizzBuzzB(15), [
-  '1',
-  '2',
-  'Fizz',
-  '4',
-  'Buzz',
-  'Fizz',
-  '7',
-  '8',
-  'Fizz',
-  'Buzz',
-  '11',
-  'Fizz',
-  '13',
-  '14',
-  'FizzBuzz',
-]);
+
+test('412. Fizz Buzz', () => {
+  [fizzBuzzA, fizzBuzzB].forEach((func) => {
+    assert.deepEqual(func(3), ['1', '2', 'Fizz']);
+    assert.deepEqual(func(5), ['1', '2', 'Fizz', '4', 'Buzz']);
+    assert.deepEqual(func(15), [
+      '1',
+      '2',
+      'Fizz',
+      '4',
+      'Buzz',
+      'Fizz',
+      '7',
+      '8',
+      'Fizz',
+      'Buzz',
+      '11',
+      'Fizz',
+      '13',
+      '14',
+      'FizzBuzz',
+    ]);
+  });
+});
 
 /**
  * 1342. Number of Steps to Reduce a Number to Zero
  */
-// a)
 function numberOfStepsA(num: number): number {
   let currentNum = num;
   let steps = 0;
@@ -258,11 +225,7 @@ function numberOfStepsA(num: number): number {
   // Time complexity = O(logn)
   // Space complexity = O(1)
 }
-assert.equal(numberOfStepsA(14), 6);
-assert.equal(numberOfStepsA(8), 4);
-assert.equal(numberOfStepsA(123), 12);
 
-// b)
 function numberOfStepsB(num: number): number {
   let currentNum = num;
   let steps = 0;
@@ -281,9 +244,14 @@ function numberOfStepsB(num: number): number {
   // Time complexity = O(logn)
   // Space complexity = O(1)
 }
-assert.equal(numberOfStepsB(14), 6);
-assert.equal(numberOfStepsB(8), 4);
-assert.equal(numberOfStepsB(123), 12);
+
+test('1342. Number of Steps to Reduce a Number to Zero', () => {
+  [numberOfStepsA, numberOfStepsB].forEach((func) => {
+    assert.equal(func(14), 6);
+    assert.equal(func(8), 4);
+    assert.equal(func(123), 12);
+  });
+});
 
 /**
  * 876. Middle of the Linked List
@@ -315,7 +283,6 @@ const generateLinkedList = (nums: number[]) => {
   return root;
 };
 
-// a)
 function middleNodeA(head: ListNode | null): ListNode | null {
   let listLength = 1;
   let currentNode = head;
@@ -343,16 +310,7 @@ function middleNodeA(head: ListNode | null): ListNode | null {
   // Time complexity = O(n)
   // Space complexity = O(1)
 }
-assert.deepStrictEqual(
-  middleNodeA(generateLinkedList([1, 2, 3, 4, 5])),
-  generateLinkedList([3, 4, 5]),
-);
-assert.deepStrictEqual(
-  middleNodeA(generateLinkedList([1, 2, 3, 4, 5, 6])),
-  generateLinkedList([4, 5, 6]),
-);
 
-// b)
 function middleNodeB(head: ListNode | null): ListNode | null {
   const nodes = [];
 
@@ -375,16 +333,7 @@ function middleNodeB(head: ListNode | null): ListNode | null {
   // Time complexity = O(n)
   // Space complexity = O(n)
 }
-assert.deepStrictEqual(
-  middleNodeB(generateLinkedList([1, 2, 3, 4, 5])),
-  generateLinkedList([3, 4, 5]),
-);
-assert.deepStrictEqual(
-  middleNodeB(generateLinkedList([1, 2, 3, 4, 5, 6])),
-  generateLinkedList([4, 5, 6]),
-);
 
-// c)
 function middleNodeC(head: ListNode | null): ListNode | null {
   let middle = head;
   let end = head;
@@ -399,14 +348,18 @@ function middleNodeC(head: ListNode | null): ListNode | null {
   // Space complexity = O(1)
 }
 
-assert.deepStrictEqual(
-  middleNodeC(generateLinkedList([1, 2, 3, 4, 5])),
-  generateLinkedList([3, 4, 5]),
-);
-assert.deepStrictEqual(
-  middleNodeC(generateLinkedList([1, 2, 3, 4, 5, 6])),
-  generateLinkedList([4, 5, 6]),
-);
+test('876. Middle of the Linked List', () => {
+  [middleNodeA, middleNodeB, middleNodeC].forEach((func) => {
+    assert.deepEqual(
+      func(generateLinkedList([1, 2, 3, 4, 5])),
+      generateLinkedList([3, 4, 5]),
+    );
+    assert.deepEqual(
+      func(generateLinkedList([1, 2, 3, 4, 5, 6])),
+      generateLinkedList([4, 5, 6]),
+    );
+  });
+});
 
 /**
  * 383. Ransom Note
@@ -438,9 +391,12 @@ function canConstruct(ransomNote: string, magazine: string): boolean {
   // Time complexity = O(m) // magazine is bigger string
   // Space complexity = O(k) // k < 26 in english, could be O(1)
 }
-assert.strictEqual(canConstruct('a', 'b'), false);
-assert.strictEqual(canConstruct('aa', 'ab'), false);
-assert.strictEqual(canConstruct('aa', 'aab'), true);
+
+test('383. Ransom Note', () => {
+  assert.equal(canConstruct('a', 'b'), false);
+  assert.equal(canConstruct('aa', 'ab'), false);
+  assert.equal(canConstruct('aa', 'aab'), true);
+});
 
 /**
  * Max Consecutive Ones
@@ -466,10 +422,13 @@ function findMaxConsecutiveOnes(nums: number[]): number {
   // Time complexity = O(n)
   // Space complexity = O(1)
 }
-assert.equal(findMaxConsecutiveOnes([1, 1, 0, 1, 1, 1]), 3);
-assert.equal(findMaxConsecutiveOnes([1, 0, 1, 1, 0, 1]), 2);
-assert.equal(findMaxConsecutiveOnes([0, 0, 0, 0, 0, 0]), 0);
-assert.equal(findMaxConsecutiveOnes([1, 1, 1, 1, 1, 1]), 6);
+
+test('Max Consecutive Ones', () => {
+  assert.equal(findMaxConsecutiveOnes([1, 1, 0, 1, 1, 1]), 3);
+  assert.equal(findMaxConsecutiveOnes([1, 0, 1, 1, 0, 1]), 2);
+  assert.equal(findMaxConsecutiveOnes([0, 0, 0, 0, 0, 0]), 0);
+  assert.equal(findMaxConsecutiveOnes([1, 1, 1, 1, 1, 1]), 6);
+});
 
 /**
  * Find Numbers with Even Number of Digits
@@ -488,22 +447,21 @@ function findNumbers(nums: number[]): number {
   // Time complexity = O(n)
   // Space complexity = O(1)
 }
-assert.equal(findNumbers([12, 345, 2, 6, 7896]), 2);
-assert.equal(findNumbers([555, 901, 482, 1771]), 1);
+
+test('Find Numbers with Even Number of Digits', () => {
+  assert.equal(findNumbers([12, 345, 2, 6, 7896]), 2);
+  assert.equal(findNumbers([555, 901, 482, 1771]), 1);
+});
 
 /**
  * Squares of a Sorted Array
  */
-// a)
 function sortedSquaresA(nums: number[]): number[] {
   return nums.map((num) => num * num).sort((a, b) => a - b);
   // Time complexity = O(n^2) / O(logn)
   // Space complexity = O(1)
 }
-assert.deepStrictEqual(sortedSquaresA([-4, -1, 0, 3, 10]), [0, 1, 9, 16, 100]);
-assert.deepStrictEqual(sortedSquaresA([-7, -3, 2, 3, 11]), [4, 9, 9, 49, 121]);
 
-// b)
 function sortedSquaresB(nums: number[]): number[] {
   const sortedSquares = [];
 
@@ -524,13 +482,16 @@ function sortedSquaresB(nums: number[]): number[] {
   // Space complexity = O(n)
 }
 
-assert.deepStrictEqual(sortedSquaresB([-4, -1, 0, 3, 10]), [0, 1, 9, 16, 100]);
-assert.deepStrictEqual(sortedSquaresB([-7, -3, 2, 3, 11]), [4, 9, 9, 49, 121]);
+test('Squares of a Sorted Array', () => {
+  [sortedSquaresA, sortedSquaresB].forEach((func) => {
+    assert.deepEqual(func([-4, -1, 0, 3, 10]), [0, 1, 9, 16, 100]);
+    assert.deepEqual(func([-7, -3, 2, 3, 11]), [4, 9, 9, 49, 121]);
+  });
+});
 
 /**
  * Duplicate Zeros
  */
-// a)
 function duplicateZerosA(arr: number[]): void {
   let i = 0;
 
@@ -550,19 +511,6 @@ function duplicateZerosA(arr: number[]): void {
   // Space complexity = O(1)
 }
 
-const arr1A = [1, 0, 2, 3, 0, 4, 5, 0];
-duplicateZerosA(arr1A);
-assert.deepStrictEqual(arr1A, [1, 0, 0, 2, 3, 0, 0, 4]);
-
-const arr2A = [1, 2, 3];
-duplicateZerosA(arr2A);
-assert.deepStrictEqual(arr2A, [1, 2, 3]);
-
-const arr3A = [0, 0, 0];
-duplicateZerosA(arr3A);
-assert.deepStrictEqual(arr3A, [0, 0, 0]);
-
-// b)
 function duplicateZerosB(arr: number[]): void {
   let zerosCount = 0;
 
@@ -602,17 +550,21 @@ function duplicateZerosB(arr: number[]): void {
   // Space complexity = O(1)
 }
 
-const arr1B = [1, 0, 2, 3, 0, 4, 5, 0];
-duplicateZerosB(arr1B);
-assert.deepStrictEqual(arr1B, [1, 0, 0, 2, 3, 0, 0, 4]);
+test('Duplicate Zeros', () => {
+  [duplicateZerosA, duplicateZerosB].forEach((func) => {
+    const arr1 = [1, 0, 2, 3, 0, 4, 5, 0];
+    func(arr1);
+    assert.deepEqual(arr1, [1, 0, 0, 2, 3, 0, 0, 4]);
 
-const arr2B = [1, 2, 3];
-duplicateZerosB(arr2B);
-assert.deepStrictEqual(arr2B, [1, 2, 3]);
+    const arr2 = [1, 2, 3];
+    func(arr2);
+    assert.deepEqual(arr2, [1, 2, 3]);
 
-const arr3B = [0, 0, 0];
-duplicateZerosB(arr3B);
-assert.deepStrictEqual(arr3B, [0, 0, 0]);
+    const arr3 = [0, 0, 0];
+    func(arr3);
+    assert.deepEqual(arr3, [0, 0, 0]);
+  });
+});
 
 /**
  * Merge Sorted Array
@@ -640,17 +592,21 @@ function mergeA(nums1: number[], m: number, nums2: number[], n: number): void {
   // Space complexity = O(1)
 }
 
-const nums11A = [1, 2, 3, 0, 0, 0];
-mergeA(nums11A, 3, [2, 5, 6], 3);
-assert.deepStrictEqual(nums11A, [1, 2, 2, 3, 5, 6]);
+test('Merge Sorted Array', () => {
+  [mergeA].forEach((func) => {
+    const nums1 = [1, 2, 3, 0, 0, 0];
+    func(nums1, 3, [2, 5, 6], 3);
+    assert.deepEqual(nums1, [1, 2, 2, 3, 5, 6]);
 
-const nums12A = [1];
-mergeA(nums12A, 1, [], 0);
-assert.deepStrictEqual(nums12A, [1]);
+    const nums2 = [1];
+    func(nums2, 1, [], 0);
+    assert.deepEqual(nums2, [1]);
 
-const nums13A = [0];
-mergeA(nums13A, 0, [1], 1);
-assert.deepStrictEqual(nums13A, [1]);
+    const nums3 = [0];
+    func(nums3, 0, [1], 1);
+    assert.deepEqual(nums3, [1]);
+  });
+});
 
 /**
  * Remove Element
@@ -677,14 +633,18 @@ function removeElement(nums: number[], val: number): number {
   // Space complexity = O(1)
 }
 
-const arr1 = [3, 2, 2, 3];
-assert.strictEqual(removeElement(arr1, 3), 2);
-assert.deepStrictEqual(arr1, [2, 2, undefined, undefined]);
+test('Remove Element', () => {
+  [removeElement].forEach((func) => {
+    const arr1 = [3, 2, 2, 3];
+    assert.equal(func(arr1, 3), 2);
+    assert.deepEqual(arr1, [2, 2, undefined, undefined]);
 
-const arr2 = [0, 1, 2, 2, 3, 0, 4, 2];
-assert.strictEqual(removeElement(arr2, 2), 5);
-assert.deepStrictEqual(arr2, [0, 1, 3, 0, 4, undefined, undefined, undefined]);
+    const arr2 = [0, 1, 2, 2, 3, 0, 4, 2];
+    assert.equal(func(arr2, 2), 5);
+    assert.deepEqual(arr2, [0, 1, 3, 0, 4, undefined, undefined, undefined]);
 
-const arr3 = [2];
-assert.strictEqual(removeElement(arr3, 3), 1);
-assert.deepStrictEqual(arr3, [2]);
+    const arr3 = [2];
+    assert.equal(func(arr3, 3), 1);
+    assert.deepEqual(arr3, [2]);
+  });
+});
