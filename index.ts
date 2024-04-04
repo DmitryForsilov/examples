@@ -293,10 +293,7 @@ function middleNodeA(head: ListNode | null): ListNode | null {
   }
 
   const guessStepsToMiddle = listLength / 2;
-  const correctStepsToMiddle =
-    guessStepsToMiddle % 1 === 0
-      ? guessStepsToMiddle + 1
-      : Math.round(guessStepsToMiddle);
+  const correctStepsToMiddle = guessStepsToMiddle % 1 === 0 ? guessStepsToMiddle + 1 : Math.round(guessStepsToMiddle);
 
   let steps = 1;
   let middleNode = head;
@@ -350,14 +347,8 @@ function middleNodeC(head: ListNode | null): ListNode | null {
 
 test('876. Middle of the Linked List', () => {
   [middleNodeA, middleNodeB, middleNodeC].forEach((func) => {
-    assert.deepEqual(
-      func(generateLinkedList([1, 2, 3, 4, 5])),
-      generateLinkedList([3, 4, 5]),
-    );
-    assert.deepEqual(
-      func(generateLinkedList([1, 2, 3, 4, 5, 6])),
-      generateLinkedList([4, 5, 6]),
-    );
+    assert.deepEqual(func(generateLinkedList([1, 2, 3, 4, 5])), generateLinkedList([3, 4, 5]));
+    assert.deepEqual(func(generateLinkedList([1, 2, 3, 4, 5, 6])), generateLinkedList([4, 5, 6]));
   });
 });
 
@@ -410,10 +401,7 @@ function findMaxConsecutiveOnes(nums: number[]): number {
       currentConsecutive += 1;
     }
     if (num === 0 || i === nums.length - 1) {
-      maxConsecutive =
-        currentConsecutive > maxConsecutive
-          ? currentConsecutive
-          : maxConsecutive;
+      maxConsecutive = currentConsecutive > maxConsecutive ? currentConsecutive : maxConsecutive;
       currentConsecutive = 0;
     }
   });
