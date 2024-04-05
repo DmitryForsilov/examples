@@ -696,3 +696,59 @@ test('Remove Element', () => {
   assert.equal(removeElementA(arrB, 3), 1);
   assert.deepEqual(arrB, [2]);
 });
+
+/**
+ * Remove Duplicates from Sorted Array
+ */
+function removeDuplicatesA(nums: number[]): number {
+  let indexOfUnique = 0;
+  let prevElement = null;
+
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] !== prevElement) {
+      nums[indexOfUnique] = nums[i];
+      indexOfUnique += 1;
+    }
+
+    prevElement = nums[i];
+  }
+
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+  return indexOfUnique;
+}
+
+function removeDuplicatesB(nums: number[]): number {
+  if (!nums.length) {
+    return 0;
+  }
+
+  let indexOfUnique = 1;
+
+  for (let i = 1; i < nums.length; i++) {
+    if (nums[i] !== nums[i - 1]) {
+      nums[indexOfUnique] = nums[i];
+      indexOfUnique += 1;
+    }
+  }
+
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+  return indexOfUnique;
+}
+
+test('Remove Duplicates from Sorted Array', () => {
+  [removeDuplicatesA, removeDuplicatesB].forEach((func) => {
+    const arr1 = [1, 1, 2];
+    assert.equal(func(arr1), 2);
+    assert.deepEqual(arr1, [1, 2, 2]);
+
+    const arr2 = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4];
+    assert.equal(func(arr2), 5);
+    assert.deepEqual(arr2, [0, 1, 2, 3, 4, 2, 2, 3, 3, 4]);
+
+    const arr3 = [] as number[];
+    assert.equal(func(arr3), 0);
+    assert.deepEqual(arr3, []);
+  });
+});
