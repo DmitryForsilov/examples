@@ -796,3 +796,79 @@ test('Check If N and Its Double Exist', () => {
     assert.equal(func([-2, 0, 10, -19, 4, 6, -8]), false);
   });
 });
+
+/**
+ * Valid Mountain Array
+ */
+function validMountainArrayA(arr: number[]): boolean {
+  if (arr.length < 3) {
+    return false;
+  }
+
+  const mods = {
+    increasing: 'increasing',
+    decreasing: 'decreasing',
+    default: 'default',
+  };
+
+  let mode = mods.default;
+
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] === arr[i - 1]) {
+      return false;
+    }
+
+    if (mode === mods.default) {
+      if (arr[i] < arr[i - 1]) {
+        return false;
+      }
+
+      if (arr[i] > arr[i - 1]) {
+        mode = mods.increasing;
+      }
+    } else if (mode === mods.increasing) {
+      if (arr[i] < arr[i - 1]) {
+        mode = mods.decreasing;
+      }
+    } else if (mode === mods.decreasing) {
+      if (arr[i] > arr[i - 1]) {
+        return false;
+      }
+    }
+  }
+
+  return mode === mods.decreasing;
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+}
+
+function validMountainArrayB(arr: number[]): boolean {
+  if (arr.length < 3) {
+    return false;
+  }
+
+  let left = 0;
+  let right = arr.length - 1;
+
+  while (left + 1 < arr.length - 1 && arr[left] < arr[left + 1]) {
+    left += 1;
+  }
+  while (right - 1 > 0 && arr[right] < arr[right - 1]) {
+    right -= 1;
+  }
+
+  return left === right;
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+}
+
+test('Valid Mountain Array', () => {
+  [validMountainArrayA, validMountainArrayB].forEach((func) => {
+    assert.equal(func([2, 1]), false);
+    assert.equal(func([3, 5, 5]), false);
+    assert.equal(func([0, 3, 2, 1]), true);
+    assert.equal(func([0, 1, 2, 3, 4]), false);
+    assert.equal(func([5, 6, 7, 8, 9]), false);
+    assert.equal(func([2, 1, 2, 3, 5, 7, 9, 10, 12, 14, 15, 16, 18, 14, 13]), false);
+  });
+});
