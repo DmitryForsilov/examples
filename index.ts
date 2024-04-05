@@ -599,7 +599,7 @@ test('Merge Sorted Array', () => {
 /**
  * Remove Element
  */
-function removeElement(nums: number[], val: number): number {
+function removeElementA(nums: number[], val: number): number {
   let i = 0;
   let count = 0;
 
@@ -621,18 +621,43 @@ function removeElement(nums: number[], val: number): number {
   // Space complexity = O(1)
 }
 
+function removeElementB(nums: number[], val: number): number {
+  let nonTargetIndex = 0;
+
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] !== val) {
+      nums[nonTargetIndex] = nums[i];
+      nonTargetIndex += 1;
+    }
+  }
+
+  return nonTargetIndex;
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+}
+
 test('Remove Element', () => {
-  [removeElement].forEach((func) => {
-    const arr1 = [3, 2, 2, 3];
-    assert.equal(func(arr1, 3), 2);
-    assert.deepEqual(arr1, [2, 2, undefined, undefined]);
+  const arr1 = [3, 2, 2, 3];
+  assert.equal(removeElementA(arr1, 3), 2);
+  assert.deepEqual(arr1, [2, 2, undefined, undefined]);
 
-    const arr2 = [0, 1, 2, 2, 3, 0, 4, 2];
-    assert.equal(func(arr2, 2), 5);
-    assert.deepEqual(arr2, [0, 1, 3, 0, 4, undefined, undefined, undefined]);
+  const arr2 = [0, 1, 2, 2, 3, 0, 4, 2];
+  assert.equal(removeElementA(arr2, 2), 5);
+  assert.deepEqual(arr2, [0, 1, 3, 0, 4, undefined, undefined, undefined]);
 
-    const arr3 = [2];
-    assert.equal(func(arr3, 3), 1);
-    assert.deepEqual(arr3, [2]);
-  });
+  const arr3 = [2];
+  assert.equal(removeElementB(arr3, 3), 1);
+  assert.deepEqual(arr3, [2]);
+
+  const arr1B = [3, 2, 2, 3];
+  assert.equal(removeElementB(arr1B, 3), 2);
+  assert.deepEqual(arr1B, [2, 2, 2, 3]);
+
+  const arr2B = [0, 1, 2, 2, 3, 0, 4, 2];
+  assert.equal(removeElementB(arr2B, 2), 5);
+  assert.deepEqual(arr2B, [0, 1, 3, 0, 4, 0, 4, 2]);
+
+  const arrB = [2];
+  assert.equal(removeElementA(arrB, 3), 1);
+  assert.deepEqual(arrB, [2]);
 });
