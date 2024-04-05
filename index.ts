@@ -752,3 +752,47 @@ test('Remove Duplicates from Sorted Array', () => {
     assert.deepEqual(arr3, []);
   });
 });
+
+/**
+ * Check If N and Its Double Exist
+ */
+function checkIfExistA(arr: number[]): boolean {
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = i + 1; j < arr.length; j++) {
+      if (arr[i] === 2 * arr[j] || 2 * arr[i] === arr[j]) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+  // Time complexity = O(n ^ 2)
+  // Space complexity = O(1)
+}
+
+function checkIfExistB(arr: number[]): boolean {
+  const hashMap: { [key: number]: number } = {};
+
+  for (let i = 0; i < arr.length; i++) {
+    hashMap[arr[i]] = i;
+  }
+
+  for (let i = 0; i < arr.length; i++) {
+    if (hashMap[arr[i] * 2] !== undefined && hashMap[arr[i] * 2] !== i) {
+      return true;
+    }
+  }
+
+  return false;
+  // Time complexity = O(n)
+  // Space complexity = O(n)
+}
+
+test('Check If N and Its Double Exist', () => {
+  [checkIfExistA, checkIfExistB].forEach((func) => {
+    assert.equal(func([10, 2, 5, 3]), true);
+    assert.equal(func([3, 1, 7, 11]), false);
+    assert.equal(func([7, 1, 14, 11]), true);
+    assert.equal(func([-2, 0, 10, -19, 4, 6, -8]), false);
+  });
+});
