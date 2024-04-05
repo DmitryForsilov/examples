@@ -6,6 +6,41 @@ import test from 'node:test';
 import { strict as assert } from 'node:assert';
 
 /**
+ * Binary search
+ */
+const binarySearch = (nums: number[], val: number): number | null => {
+  let start = 0;
+  let end = nums.length - 1;
+
+  while (start <= end) {
+    const mid = Math.floor((start + end) / 2);
+
+    if (nums[mid] === val) {
+      return mid;
+    }
+
+    if (nums[mid] > val) {
+      end = mid - 1;
+    } else {
+      start = mid + 1;
+    }
+  }
+
+  return null;
+};
+
+test('Binary search', () => {
+  const bigArray = Array(100)
+    .fill(0)
+    .map((_, i) => i);
+
+  assert.equal(binarySearch([0, 1, 2, 3, 4, 5], 3), 3);
+  assert.equal(binarySearch([0, 1, 2, 3, 4, 5], 6), null);
+  assert.equal(binarySearch([0, 1, 2, 3, 4], 2), 2);
+  assert.equal(binarySearch(bigArray, 73), 73);
+});
+
+/**
  * 226. Invert Binary Tree
  */
 
