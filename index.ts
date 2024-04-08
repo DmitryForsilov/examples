@@ -997,3 +997,27 @@ test('Valid Mountain Array', () => {
     assert.equal(func([2, 1, 2, 3, 5, 7, 9, 10, 12, 14, 15, 16, 18, 14, 13]), false);
   });
 });
+
+/**
+ * Replace Elements with Greatest Element on Right Side
+ */
+function replaceElements(arr: number[]): number[] {
+  let max = -1;
+
+  for (let i = arr.length - 1; i >= 0; i--) {
+    const num = arr[i];
+
+    arr[i] = max;
+    max = Math.max(max, num);
+  }
+
+  return arr;
+
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+}
+
+test('Replace Elements with Greatest Element on Right Side', () => {
+  assert.deepEqual(replaceElements([17, 18, 5, 4, 6, 1]), [18, 6, 6, 6, 1, -1]);
+  assert.deepEqual(replaceElements([400]), [-1]);
+});
