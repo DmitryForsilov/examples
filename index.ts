@@ -848,18 +848,18 @@ function removeDuplicatesB(nums: number[]): number {
     return 0;
   }
 
-  let indexOfUnique = 1;
+  let writePointer = 1;
 
-  for (let i = 1; i < nums.length; i++) {
-    if (nums[i] !== nums[i - 1]) {
-      nums[indexOfUnique] = nums[i];
-      indexOfUnique += 1;
+  for (let readPointer = 1; readPointer < nums.length; readPointer++) {
+    if (nums[readPointer] !== nums[readPointer - 1]) {
+      nums[writePointer] = nums[readPointer];
+      writePointer += 1;
     }
   }
 
   // Time complexity = O(n)
   // Space complexity = O(1)
-  return indexOfUnique;
+  return writePointer;
 }
 
 test('Remove Duplicates from Sorted Array', () => {
