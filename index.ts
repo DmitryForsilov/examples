@@ -6,6 +6,131 @@ import test from 'node:test';
 import { strict as assert } from 'node:assert';
 
 /**
+ * Collect all nodes in non-binary tree
+ */
+type Node = {
+  val: number;
+  children: Node[] | null;
+};
+
+const generateTree = (vals: number[]): Node => {
+  const root = {
+    val: vals[0],
+    children: null,
+  };
+
+  let currentIndex = 1;
+
+  const inner = (node: Node) => {
+    if (currentIndex > vals.length) {
+      return root;
+    }
+
+    const childrenCount = Math.floor(Math.random() * (5 - 1) + 1);
+
+    if (childrenCount > 0 && currentIndex < vals.length) {
+      node.children = [];
+
+      for (let i = 1; i <= childrenCount; i++) {
+        if (currentIndex > vals.length - 1) {
+          return root;
+        }
+
+        node.children.push({
+          val: vals[currentIndex],
+          children: null,
+        });
+        currentIndex += 1;
+      }
+
+      node.children.forEach((child) => inner(child));
+    }
+
+    return root;
+  };
+
+  return inner(root);
+
+  // Time complexity = O(n^2)
+  // Space complexity = O(n)
+};
+
+const collectAllNodesA = (root: Node): number[] => {
+  const inner = (node: Node, result: number[]) => {
+    result.push(node.val);
+
+    if (node.children) {
+      node.children.forEach((child) => inner(child, result));
+    }
+
+    return result;
+  };
+
+  return inner(root, []);
+
+  // Time complexity = O(n^2)
+  // Space complexity = O(1)
+};
+
+const collectAllNodesB = (root: Node): number[] => {
+  const result = [];
+  const nodes = [root];
+
+  while (nodes.length) {
+    const currNode = nodes.pop();
+
+    if (currNode) {
+      result.push(currNode.val);
+
+      if (currNode.children) {
+        currNode.children.forEach((child) => nodes.unshift(child));
+      }
+    }
+  }
+
+  return result;
+
+  // Time complexity = O(n^2)
+  // Space complexity = O(n)
+};
+
+test('Collect all nodes in non-binary tree', () => {
+  const vals1 = Array(5)
+    .fill(0)
+    .map((_, i) => i + 1);
+  const vals2 = Array(100)
+    .fill(0)
+    .map((_, i) => i + 1);
+  const vals3 = Array(100)
+    .fill(0)
+    .map((_, i) => -(i + 1));
+
+  const tree1 = generateTree(vals1);
+  const tree2 = generateTree(vals2);
+  const tree3 = generateTree(vals3);
+
+  [collectAllNodesA].forEach((func) => {
+    assert.deepEqual(
+      func(tree1).sort((a, b) => Math.abs(a) - Math.abs(b)),
+      vals1,
+    );
+    assert.deepEqual(
+      func(tree2).sort((a, b) => Math.abs(a) - Math.abs(b)),
+      vals2,
+    );
+    assert.deepEqual(
+      func(tree3).sort((a, b) => Math.abs(a) - Math.abs(b)),
+      vals3,
+    );
+  });
+  [collectAllNodesB].forEach((func) => {
+    assert.deepEqual(func(tree1), vals1);
+    assert.deepEqual(func(tree2), vals2);
+    assert.deepEqual(func(tree3), vals3);
+  });
+});
+
+/**
  * Binary search
  */
 const binarySearch = (nums: number[], val: number): number | null => {
