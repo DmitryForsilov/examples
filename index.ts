@@ -1363,3 +1363,86 @@ describe('Third Maximum Number', () => {
     assert.equal(thirdMax([2, 2, 3, 1]), 1);
   });
 });
+
+/**
+ * Find All Numbers Disappeared in an Array
+ */
+function findDisappearedNumbersA(nums: number[]): number[] {
+  const expectedNums = [];
+  const hashMap: { [key: number]: number } = {};
+  const result = [];
+
+  for (let i = 0; i < nums.length; i++) {
+    expectedNums[i] = i + 1;
+    hashMap[nums[i]] = nums[i];
+  }
+
+  for (let i = 0; i < expectedNums.length; i++) {
+    const expectedNum = expectedNums[i];
+
+    if (hashMap[expectedNum] === undefined) {
+      result.push(expectedNum);
+    }
+  }
+
+  return result;
+
+  // Time complexity = O(n)
+  // Space complexity = O(n)
+}
+
+function findDisappearedNumbersB(nums: number[]): number[] {
+  const hashSet = new Set(nums);
+  const result = [];
+
+  for (let i = 1; i <= nums.length; i++) {
+    if (!hashSet.has(i)) {
+      result.push(i);
+    }
+  }
+
+  return result;
+
+  // Time complexity = O(n)
+  // Space complexity = O(n)
+}
+
+function findDisappearedNumbersC(nums: number[]): number[] {
+  const arrayOfExist = Array(nums.length).fill(false);
+  const result = [];
+
+  for (let i = 0; i < nums.length; i++) {
+    const num = nums[i];
+
+    arrayOfExist[num] = true;
+  }
+
+  for (let i = 1; i <= nums.length; i++) {
+    if (!arrayOfExist[i]) {
+      result.push(i);
+    }
+  }
+
+  return result;
+  // Time complexity = O(n)
+  // Space complexity = O(n)
+}
+
+describe('Find All Numbers Disappeared in an Array', () => {
+  // Given an array nums of n integers where nums[i] is in the range [1, n],
+  // return an array of all the integers in the range [1, n] that do not appear in nums.
+  it('should be deep equal; findDisappearedNumbersA', () => {
+    assert.deepEqual(findDisappearedNumbersA([4, 3, 2, 7, 8, 2, 3, 1]), [5, 6]);
+    assert.deepEqual(findDisappearedNumbersA([1, 1]), [2]);
+  });
+
+  it('should be deep equal; findDisappearedNumbersB', () => {
+    assert.deepEqual(findDisappearedNumbersB([4, 3, 2, 7, 8, 2, 3, 1]), [5, 6]);
+    assert.deepEqual(findDisappearedNumbersB([1, 1]), [2]);
+  });
+
+  it('should be deep equal; findDisappearedNumbersC', () => {
+    assert.deepEqual(findDisappearedNumbersC([4, 3, 2, 7, 8, 2, 3, 1]), [5, 6]);
+    assert.deepEqual(findDisappearedNumbersC([1, 1]), [2]);
+  });
+});
