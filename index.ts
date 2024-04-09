@@ -1313,3 +1313,53 @@ describe('Height Checker', () => {
     assert.equal(heightChecker([1, 2, 3, 4, 5]), 0);
   });
 });
+
+/**
+ * Third Maximum Number
+ */
+function thirdMax(nums: number[]): number {
+  let firstMax = null;
+
+  for (let i = 0; i < nums.length; i++) {
+    firstMax = firstMax === null ? nums[i] : Math.max(firstMax, nums[i]);
+  }
+
+  let secondMax = null;
+
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] !== firstMax) {
+      secondMax = secondMax === null ? nums[i] : Math.max(secondMax, nums[i]);
+    }
+  }
+
+  let thirdMax = null;
+
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] !== firstMax && nums[i] !== secondMax) {
+      thirdMax = thirdMax === null ? nums[i] : Math.max(thirdMax, nums[i]);
+    }
+  }
+
+  return thirdMax !== null ? (thirdMax as number) : (firstMax as number);
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+}
+
+describe('Third Maximum Number', () => {
+  it('should be equal', () => {
+    // The first distinct maximum is 3.
+    // The second distinct maximum is 2.
+    // The third distinct maximum is 1.
+    assert.equal(thirdMax([3, 2, 1]), 1);
+
+    // The first distinct maximum is 2.
+    // The second distinct maximum is 1.
+    // The third distinct maximum does not exist, so the maximum (2) is returned instead.
+    assert.equal(thirdMax([1, 2]), 2);
+
+    // The first distinct maximum is 3.
+    // The second distinct maximum is 2 (both 2's are counted together since they have the same value).
+    // The third distinct maximum is 1.
+    assert.equal(thirdMax([2, 2, 3, 1]), 1);
+  });
+});
