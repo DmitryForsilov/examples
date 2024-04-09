@@ -2,7 +2,7 @@
  * LEETCODE stuff
  */
 
-import test from 'node:test';
+import test, { describe, it, beforeEach } from 'node:test';
 import { strict as assert } from 'node:assert';
 
 /**
@@ -796,30 +796,64 @@ function removeElementB(nums: number[], val: number): number {
   // Space complexity = O(1)
 }
 
-test('Remove Element', () => {
-  const arr1 = [3, 2, 2, 3];
-  assert.equal(removeElementA(arr1, 3), 2);
-  assert.deepEqual(arr1, [2, 2, undefined, undefined]);
+function removeElementC(nums: number[], val: number): number {
+  let writePointer = 0;
 
-  const arr2 = [0, 1, 2, 2, 3, 0, 4, 2];
-  assert.equal(removeElementA(arr2, 2), 5);
-  assert.deepEqual(arr2, [0, 1, 3, 0, 4, undefined, undefined, undefined]);
+  for (let readPointer = 0; readPointer < nums.length; readPointer++) {
+    if (nums[readPointer] !== val) {
+      [nums[writePointer], nums[readPointer]] = [nums[readPointer], nums[writePointer]];
+      writePointer += 1;
+    }
+  }
 
-  const arr3 = [2];
-  assert.equal(removeElementB(arr3, 3), 1);
-  assert.deepEqual(arr3, [2]);
+  return writePointer;
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+}
 
-  const arr1B = [3, 2, 2, 3];
-  assert.equal(removeElementB(arr1B, 3), 2);
-  assert.deepEqual(arr1B, [2, 2, 2, 3]);
+describe('Remove Element', () => {
+  let arr1: number[];
+  let arr2: number[];
+  let arr3: number[];
 
-  const arr2B = [0, 1, 2, 2, 3, 0, 4, 2];
-  assert.equal(removeElementB(arr2B, 2), 5);
-  assert.deepEqual(arr2B, [0, 1, 3, 0, 4, 0, 4, 2]);
+  beforeEach(() => {
+    arr1 = [3, 2, 2, 3];
+    arr2 = [0, 1, 2, 2, 3, 0, 4, 2];
+    arr3 = [2];
+  });
 
-  const arrB = [2];
-  assert.equal(removeElementA(arrB, 3), 1);
-  assert.deepEqual(arrB, [2]);
+  it('removeElementA', () => {
+    assert.equal(removeElementA(arr1, 3), 2);
+    assert.deepEqual(arr1, [2, 2, undefined, undefined]);
+
+    assert.equal(removeElementA(arr2, 2), 5);
+    assert.deepEqual(arr2, [0, 1, 3, 0, 4, undefined, undefined, undefined]);
+
+    assert.equal(removeElementA(arr3, 3), 1);
+    assert.deepEqual(arr3, [2]);
+  });
+
+  it('removeElementB', () => {
+    assert.equal(removeElementB(arr1, 3), 2);
+    assert.deepEqual(arr1, [2, 2, 2, 3]);
+
+    assert.equal(removeElementB(arr2, 2), 5);
+    assert.deepEqual(arr2, [0, 1, 3, 0, 4, 0, 4, 2]);
+
+    assert.equal(removeElementB(arr3, 3), 1);
+    assert.deepEqual(arr3, [2]);
+  });
+
+  it('removeElementC', () => {
+    assert.equal(removeElementC(arr1, 3), 2);
+    assert.deepEqual(arr1, [2, 2, 3, 3]);
+
+    assert.equal(removeElementC(arr2, 2), 5);
+    assert.deepEqual(arr2, [0, 1, 3, 0, 4, 2, 2, 2]);
+
+    assert.equal(removeElementC(arr3, 3), 1);
+    assert.deepEqual(arr3, [2]);
+  });
 });
 
 /**
