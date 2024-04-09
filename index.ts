@@ -1021,3 +1021,51 @@ test('Replace Elements with Greatest Element on Right Side', () => {
   assert.deepEqual(replaceElements([17, 18, 5, 4, 6, 1]), [18, 6, 6, 6, 1, -1]);
   assert.deepEqual(replaceElements([400]), [-1]);
 });
+
+/**
+ * Move Zeroes
+ */
+function moveZeroesA(nums: number[]): void {
+  let writePointer = 0;
+
+  for (let readPointer = 0; readPointer < nums.length; readPointer++) {
+    if (nums[readPointer] !== 0) {
+      const temp = nums[writePointer];
+
+      nums[writePointer] = nums[readPointer];
+
+      if (temp === 0) {
+        nums[readPointer] = 0;
+      }
+      writePointer += 1;
+    }
+  }
+
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+}
+
+test('Move Zeroes', () => {
+  [moveZeroesA].forEach((func) => {
+    const arr1 = [0, 1, 0, 3, 12];
+    const arr2 = [1, 0];
+    const arr3 = [2, 1];
+    const arr4 = [0];
+    const arr5 = [1];
+
+    func(arr1);
+    assert.deepEqual(arr1, [1, 3, 12, 0, 0]);
+
+    func(arr2);
+    assert.deepEqual(arr2, [1, 0]);
+
+    func(arr3);
+    assert.deepEqual(arr3, [2, 1]);
+
+    func(arr4);
+    assert.deepEqual(arr4, [0]);
+
+    func(arr5);
+    assert.deepEqual(arr5, [1]);
+  });
+});
