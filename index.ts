@@ -2,7 +2,7 @@
  * LEETCODE stuff
  */
 
-import test, { describe, it, beforeEach } from 'node:test';
+import { describe, it, beforeEach } from 'node:test';
 import { strict as assert } from 'node:assert';
 
 /**
@@ -94,7 +94,7 @@ const collectAllNodesB = (root: Node): number[] => {
   // Space complexity = O(n)
 };
 
-test('Collect all nodes in non-binary tree', () => {
+describe('Collect all nodes in non-binary tree', () => {
   const vals1 = Array(5)
     .fill(0)
     .map((_, i) => i + 1);
@@ -109,24 +109,25 @@ test('Collect all nodes in non-binary tree', () => {
   const tree2 = generateTree(vals2);
   const tree3 = generateTree(vals3);
 
-  [collectAllNodesA].forEach((func) => {
+  it('should be deepEqual; collectAllNodesA', () => {
     assert.deepEqual(
-      func(tree1).sort((a, b) => Math.abs(a) - Math.abs(b)),
+      collectAllNodesA(tree1).sort((a, b) => Math.abs(a) - Math.abs(b)),
       vals1,
     );
     assert.deepEqual(
-      func(tree2).sort((a, b) => Math.abs(a) - Math.abs(b)),
+      collectAllNodesA(tree2).sort((a, b) => Math.abs(a) - Math.abs(b)),
       vals2,
     );
     assert.deepEqual(
-      func(tree3).sort((a, b) => Math.abs(a) - Math.abs(b)),
+      collectAllNodesA(tree3).sort((a, b) => Math.abs(a) - Math.abs(b)),
       vals3,
     );
   });
-  [collectAllNodesB].forEach((func) => {
-    assert.deepEqual(func(tree1), vals1);
-    assert.deepEqual(func(tree2), vals2);
-    assert.deepEqual(func(tree3), vals3);
+
+  it('should be deepEqual; collectAllNodesB', () => {
+    assert.deepEqual(collectAllNodesB(tree1), vals1);
+    assert.deepEqual(collectAllNodesB(tree2), vals2);
+    assert.deepEqual(collectAllNodesB(tree3), vals3);
   });
 });
 
@@ -154,15 +155,17 @@ const binarySearch = (nums: number[], val: number): number | null => {
   return null;
 };
 
-test('Binary search', () => {
+describe('Binary search', () => {
   const bigArray = Array(100)
     .fill(0)
     .map((_, i) => i);
 
-  assert.equal(binarySearch([0, 1, 2, 3, 4, 5], 3), 3);
-  assert.equal(binarySearch([0, 1, 2, 3, 4, 5], 6), null);
-  assert.equal(binarySearch([0, 1, 2, 3, 4], 2), 2);
-  assert.equal(binarySearch(bigArray, 73), 73);
+  it('should be equal', () => {
+    assert.equal(binarySearch([0, 1, 2, 3, 4, 5], 3), 3);
+    assert.equal(binarySearch([0, 1, 2, 3, 4, 5], 6), null);
+    assert.equal(binarySearch([0, 1, 2, 3, 4], 2), 2);
+    assert.equal(binarySearch(bigArray, 73), 73);
+  });
 });
 
 /**
@@ -210,10 +213,12 @@ function runningSum(nums: number[]): number[] {
   // Space complexity = O(1)
 }
 
-test('1480. Running Sum of 1d Array', () => {
-  assert.deepEqual(runningSum([1, 2, 3, 4]), [1, 3, 6, 10]);
-  assert.deepEqual(runningSum([1, 1, 1, 1, 1]), [1, 2, 3, 4, 5]);
-  assert.deepEqual(runningSum([3, 1, 2, 10, 1]), [3, 4, 6, 16, 17]);
+describe('1480. Running Sum of 1d Array', () => {
+  it('should be deep equal', () => {
+    assert.deepEqual(runningSum([1, 2, 3, 4]), [1, 3, 6, 10]);
+    assert.deepEqual(runningSum([1, 1, 1, 1, 1]), [1, 2, 3, 4, 5]);
+    assert.deepEqual(runningSum([3, 1, 2, 10, 1]), [3, 4, 6, 16, 17]);
+  });
 });
 
 /**
@@ -261,31 +266,32 @@ function maximumWealthB(accounts: number[][]): number {
   // Space complexity = O(1)
 }
 
-test('1672. Richest Customer Wealth', () => {
-  [maximumWealthA, maximumWealthB].forEach((func) => {
-    assert.equal(
-      func([
-        [1, 2, 3],
-        [3, 2, 1],
-      ]),
-      6,
-    );
-    assert.equal(
-      func([
-        [1, 5],
-        [7, 3],
-        [3, 5],
-      ]),
-      10,
-    );
-    assert.equal(
-      func([
-        [2, 8, 7],
-        [7, 1, 3],
-        [1, 9, 5],
-      ]),
-      17,
-    );
+describe('1672. Richest Customer Wealth', () => {
+  const arr1 = [
+    [1, 2, 3],
+    [3, 2, 1],
+  ];
+  const arr2 = [
+    [1, 5],
+    [7, 3],
+    [3, 5],
+  ];
+  const arr3 = [
+    [2, 8, 7],
+    [7, 1, 3],
+    [1, 9, 5],
+  ];
+
+  it('should be equal; maximumWealthA', () => {
+    assert.equal(maximumWealthA(arr1), 6);
+    assert.equal(maximumWealthA(arr2), 10);
+    assert.equal(maximumWealthA(arr3), 17);
+  });
+
+  it('should be equal; maximumWealthB', () => {
+    assert.equal(maximumWealthB(arr1), 6);
+    assert.equal(maximumWealthB(arr2), 10);
+    assert.equal(maximumWealthB(arr3), 17);
   });
 });
 
@@ -340,11 +346,33 @@ function fizzBuzzB(n: number): string[] {
   // Space complexity = O(1)
 }
 
-test('412. Fizz Buzz', () => {
-  [fizzBuzzA, fizzBuzzB].forEach((func) => {
-    assert.deepEqual(func(3), ['1', '2', 'Fizz']);
-    assert.deepEqual(func(5), ['1', '2', 'Fizz', '4', 'Buzz']);
-    assert.deepEqual(func(15), [
+describe('412. Fizz Buzz', () => {
+  it('should be deep equal; fizzBuzzA', () => {
+    assert.deepEqual(fizzBuzzA(3), ['1', '2', 'Fizz']);
+    assert.deepEqual(fizzBuzzA(5), ['1', '2', 'Fizz', '4', 'Buzz']);
+    assert.deepEqual(fizzBuzzA(15), [
+      '1',
+      '2',
+      'Fizz',
+      '4',
+      'Buzz',
+      'Fizz',
+      '7',
+      '8',
+      'Fizz',
+      'Buzz',
+      '11',
+      'Fizz',
+      '13',
+      '14',
+      'FizzBuzz',
+    ]);
+  });
+
+  it('should be deep equal; fizzBuzzB', () => {
+    assert.deepEqual(fizzBuzzB(3), ['1', '2', 'Fizz']);
+    assert.deepEqual(fizzBuzzB(5), ['1', '2', 'Fizz', '4', 'Buzz']);
+    assert.deepEqual(fizzBuzzB(15), [
       '1',
       '2',
       'Fizz',
@@ -405,11 +433,17 @@ function numberOfStepsB(num: number): number {
   // Space complexity = O(1)
 }
 
-test('1342. Number of Steps to Reduce a Number to Zero', () => {
-  [numberOfStepsA, numberOfStepsB].forEach((func) => {
-    assert.equal(func(14), 6);
-    assert.equal(func(8), 4);
-    assert.equal(func(123), 12);
+describe('1342. Number of Steps to Reduce a Number to Zero', () => {
+  it('should be equal; numberOfStepsA', () => {
+    assert.equal(numberOfStepsA(14), 6);
+    assert.equal(numberOfStepsA(8), 4);
+    assert.equal(numberOfStepsA(123), 12);
+  });
+
+  it('should be equal; numberOfStepsB', () => {
+    assert.equal(numberOfStepsB(14), 6);
+    assert.equal(numberOfStepsB(8), 4);
+    assert.equal(numberOfStepsB(123), 12);
   });
 });
 
@@ -505,10 +539,20 @@ function middleNodeC(head: ListNode | null): ListNode | null {
   // Space complexity = O(1)
 }
 
-test('876. Middle of the Linked List', () => {
-  [middleNodeA, middleNodeB, middleNodeC].forEach((func) => {
-    assert.deepEqual(func(generateLinkedList([1, 2, 3, 4, 5])), generateLinkedList([3, 4, 5]));
-    assert.deepEqual(func(generateLinkedList([1, 2, 3, 4, 5, 6])), generateLinkedList([4, 5, 6]));
+describe('876. Middle of the Linked List', () => {
+  it('should be deep equal; middleNodeA', () => {
+    assert.deepEqual(middleNodeA(generateLinkedList([1, 2, 3, 4, 5])), generateLinkedList([3, 4, 5]));
+    assert.deepEqual(middleNodeA(generateLinkedList([1, 2, 3, 4, 5, 6])), generateLinkedList([4, 5, 6]));
+  });
+
+  it('should be deep equal; middleNodeB', () => {
+    assert.deepEqual(middleNodeB(generateLinkedList([1, 2, 3, 4, 5])), generateLinkedList([3, 4, 5]));
+    assert.deepEqual(middleNodeB(generateLinkedList([1, 2, 3, 4, 5, 6])), generateLinkedList([4, 5, 6]));
+  });
+
+  it('should be deep equal; middleNodeC', () => {
+    assert.deepEqual(middleNodeC(generateLinkedList([1, 2, 3, 4, 5])), generateLinkedList([3, 4, 5]));
+    assert.deepEqual(middleNodeC(generateLinkedList([1, 2, 3, 4, 5, 6])), generateLinkedList([4, 5, 6]));
   });
 });
 
@@ -543,10 +587,12 @@ function canConstruct(ransomNote: string, magazine: string): boolean {
   // Space complexity = O(k) // k < 26 in english, could be O(1)
 }
 
-test('383. Ransom Note', () => {
-  assert.equal(canConstruct('a', 'b'), false);
-  assert.equal(canConstruct('aa', 'ab'), false);
-  assert.equal(canConstruct('aa', 'aab'), true);
+describe('383. Ransom Note', () => {
+  it('should be equal', () => {
+    assert.equal(canConstruct('a', 'b'), false);
+    assert.equal(canConstruct('aa', 'ab'), false);
+    assert.equal(canConstruct('aa', 'aab'), true);
+  });
 });
 
 /**
@@ -571,11 +617,13 @@ function findMaxConsecutiveOnes(nums: number[]): number {
   // Space complexity = O(1)
 }
 
-test('Max Consecutive Ones', () => {
-  assert.equal(findMaxConsecutiveOnes([1, 1, 0, 1, 1, 1]), 3);
-  assert.equal(findMaxConsecutiveOnes([1, 0, 1, 1, 0, 1]), 2);
-  assert.equal(findMaxConsecutiveOnes([0, 0, 0, 0, 0, 0]), 0);
-  assert.equal(findMaxConsecutiveOnes([1, 1, 1, 1, 1, 1]), 6);
+describe('Max Consecutive Ones', () => {
+  it('should be equal', () => {
+    assert.equal(findMaxConsecutiveOnes([1, 1, 0, 1, 1, 1]), 3);
+    assert.equal(findMaxConsecutiveOnes([1, 0, 1, 1, 0, 1]), 2);
+    assert.equal(findMaxConsecutiveOnes([0, 0, 0, 0, 0, 0]), 0);
+    assert.equal(findMaxConsecutiveOnes([1, 1, 1, 1, 1, 1]), 6);
+  });
 });
 
 /**
@@ -596,9 +644,11 @@ function findNumbers(nums: number[]): number {
   // Space complexity = O(1)
 }
 
-test('Find Numbers with Even Number of Digits', () => {
-  assert.equal(findNumbers([12, 345, 2, 6, 7896]), 2);
-  assert.equal(findNumbers([555, 901, 482, 1771]), 1);
+describe('Find Numbers with Even Number of Digits', () => {
+  it('should be equal', () => {
+    assert.equal(findNumbers([12, 345, 2, 6, 7896]), 2);
+    assert.equal(findNumbers([555, 901, 482, 1771]), 1);
+  });
 });
 
 /**
@@ -630,10 +680,15 @@ function sortedSquaresB(nums: number[]): number[] {
   // Space complexity = O(n)
 }
 
-test('Squares of a Sorted Array', () => {
-  [sortedSquaresA, sortedSquaresB].forEach((func) => {
-    assert.deepEqual(func([-4, -1, 0, 3, 10]), [0, 1, 9, 16, 100]);
-    assert.deepEqual(func([-7, -3, 2, 3, 11]), [4, 9, 9, 49, 121]);
+describe('Squares of a Sorted Array', () => {
+  it('should be deep equal; sortedSquaresA', () => {
+    assert.deepEqual(sortedSquaresA([-4, -1, 0, 3, 10]), [0, 1, 9, 16, 100]);
+    assert.deepEqual(sortedSquaresA([-7, -3, 2, 3, 11]), [4, 9, 9, 49, 121]);
+  });
+
+  it('should be deep equal; sortedSquaresB', () => {
+    assert.deepEqual(sortedSquaresB([-4, -1, 0, 3, 10]), [0, 1, 9, 16, 100]);
+    assert.deepEqual(sortedSquaresB([-7, -3, 2, 3, 11]), [4, 9, 9, 49, 121]);
   });
 });
 
@@ -698,18 +753,32 @@ function duplicateZerosB(arr: number[]): void {
   // Space complexity = O(1)
 }
 
-test('Duplicate Zeros', () => {
-  [duplicateZerosA, duplicateZerosB].forEach((func) => {
+describe('Duplicate Zeros', () => {
+  it('should be deep equal; duplicateZerosA', () => {
     const arr1 = [1, 0, 2, 3, 0, 4, 5, 0];
-    func(arr1);
+    duplicateZerosA(arr1);
     assert.deepEqual(arr1, [1, 0, 0, 2, 3, 0, 0, 4]);
 
     const arr2 = [1, 2, 3];
-    func(arr2);
+    duplicateZerosA(arr2);
     assert.deepEqual(arr2, [1, 2, 3]);
 
     const arr3 = [0, 0, 0];
-    func(arr3);
+    duplicateZerosA(arr3);
+    assert.deepEqual(arr3, [0, 0, 0]);
+  });
+
+  it('should be deep equal; duplicateZerosB', () => {
+    const arr1 = [1, 0, 2, 3, 0, 4, 5, 0];
+    duplicateZerosB(arr1);
+    assert.deepEqual(arr1, [1, 0, 0, 2, 3, 0, 0, 4]);
+
+    const arr2 = [1, 2, 3];
+    duplicateZerosB(arr2);
+    assert.deepEqual(arr2, [1, 2, 3]);
+
+    const arr3 = [0, 0, 0];
+    duplicateZerosB(arr3);
     assert.deepEqual(arr3, [0, 0, 0]);
   });
 });
@@ -717,7 +786,7 @@ test('Duplicate Zeros', () => {
 /**
  * Merge Sorted Array
  */
-function mergeA(nums1: number[], m: number, nums2: number[], n: number): void {
+function merge(nums1: number[], m: number, nums2: number[], n: number): void {
   let index1 = m - 1;
   let index2 = n - 1;
 
@@ -740,18 +809,18 @@ function mergeA(nums1: number[], m: number, nums2: number[], n: number): void {
   // Space complexity = O(1)
 }
 
-test('Merge Sorted Array', () => {
-  [mergeA].forEach((func) => {
+describe('Merge Sorted Array', () => {
+  it('should be deep equal', () => {
     const nums1 = [1, 2, 3, 0, 0, 0];
-    func(nums1, 3, [2, 5, 6], 3);
+    merge(nums1, 3, [2, 5, 6], 3);
     assert.deepEqual(nums1, [1, 2, 2, 3, 5, 6]);
 
     const nums2 = [1];
-    func(nums2, 1, [], 0);
+    merge(nums2, 1, [], 0);
     assert.deepEqual(nums2, [1]);
 
     const nums3 = [0];
-    func(nums3, 0, [1], 1);
+    merge(nums3, 0, [1], 1);
     assert.deepEqual(nums3, [1]);
   });
 });
@@ -896,18 +965,32 @@ function removeDuplicatesB(nums: number[]): number {
   return writePointer;
 }
 
-test('Remove Duplicates from Sorted Array', () => {
-  [removeDuplicatesA, removeDuplicatesB].forEach((func) => {
+describe('Remove Duplicates from Sorted Array', () => {
+  it('should be equal and deep equal; removeDuplicatesA', () => {
     const arr1 = [1, 1, 2];
-    assert.equal(func(arr1), 2);
+    assert.equal(removeDuplicatesA(arr1), 2);
     assert.deepEqual(arr1, [1, 2, 2]);
 
     const arr2 = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4];
-    assert.equal(func(arr2), 5);
+    assert.equal(removeDuplicatesA(arr2), 5);
     assert.deepEqual(arr2, [0, 1, 2, 3, 4, 2, 2, 3, 3, 4]);
 
     const arr3 = [] as number[];
-    assert.equal(func(arr3), 0);
+    assert.equal(removeDuplicatesA(arr3), 0);
+    assert.deepEqual(arr3, []);
+  });
+
+  it('should be equal and deep equal; removeDuplicatesB', () => {
+    const arr1 = [1, 1, 2];
+    assert.equal(removeDuplicatesB(arr1), 2);
+    assert.deepEqual(arr1, [1, 2, 2]);
+
+    const arr2 = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4];
+    assert.equal(removeDuplicatesB(arr2), 5);
+    assert.deepEqual(arr2, [0, 1, 2, 3, 4, 2, 2, 3, 3, 4]);
+
+    const arr3 = [] as number[];
+    assert.equal(removeDuplicatesB(arr3), 0);
     assert.deepEqual(arr3, []);
   });
 });
@@ -947,12 +1030,19 @@ function checkIfExistB(arr: number[]): boolean {
   // Space complexity = O(n)
 }
 
-test('Check If N and Its Double Exist', () => {
-  [checkIfExistA, checkIfExistB].forEach((func) => {
-    assert.equal(func([10, 2, 5, 3]), true);
-    assert.equal(func([3, 1, 7, 11]), false);
-    assert.equal(func([7, 1, 14, 11]), true);
-    assert.equal(func([-2, 0, 10, -19, 4, 6, -8]), false);
+describe('Check If N and Its Double Exist', () => {
+  it('should be equal; checkIfExistA', () => {
+    assert.equal(checkIfExistA([10, 2, 5, 3]), true);
+    assert.equal(checkIfExistA([3, 1, 7, 11]), false);
+    assert.equal(checkIfExistA([7, 1, 14, 11]), true);
+    assert.equal(checkIfExistA([-2, 0, 10, -19, 4, 6, -8]), false);
+  });
+
+  it('should be equal; checkIfExistB', () => {
+    assert.equal(checkIfExistB([10, 2, 5, 3]), true);
+    assert.equal(checkIfExistB([3, 1, 7, 11]), false);
+    assert.equal(checkIfExistB([7, 1, 14, 11]), true);
+    assert.equal(checkIfExistB([-2, 0, 10, -19, 4, 6, -8]), false);
   });
 });
 
@@ -1021,14 +1111,23 @@ function validMountainArrayB(arr: number[]): boolean {
   // Space complexity = O(1)
 }
 
-test('Valid Mountain Array', () => {
-  [validMountainArrayA, validMountainArrayB].forEach((func) => {
-    assert.equal(func([2, 1]), false);
-    assert.equal(func([3, 5, 5]), false);
-    assert.equal(func([0, 3, 2, 1]), true);
-    assert.equal(func([0, 1, 2, 3, 4]), false);
-    assert.equal(func([5, 6, 7, 8, 9]), false);
-    assert.equal(func([2, 1, 2, 3, 5, 7, 9, 10, 12, 14, 15, 16, 18, 14, 13]), false);
+describe('Valid Mountain Array', () => {
+  it('should be equal; validMountainArrayA', () => {
+    assert.equal(validMountainArrayA([2, 1]), false);
+    assert.equal(validMountainArrayA([3, 5, 5]), false);
+    assert.equal(validMountainArrayA([0, 3, 2, 1]), true);
+    assert.equal(validMountainArrayA([0, 1, 2, 3, 4]), false);
+    assert.equal(validMountainArrayA([5, 6, 7, 8, 9]), false);
+    assert.equal(validMountainArrayA([2, 1, 2, 3, 5, 7, 9, 10, 12, 14, 15, 16, 18, 14, 13]), false);
+  });
+
+  it('should be equal; validMountainArrayB', () => {
+    assert.equal(validMountainArrayB([2, 1]), false);
+    assert.equal(validMountainArrayB([3, 5, 5]), false);
+    assert.equal(validMountainArrayB([0, 3, 2, 1]), true);
+    assert.equal(validMountainArrayB([0, 1, 2, 3, 4]), false);
+    assert.equal(validMountainArrayB([5, 6, 7, 8, 9]), false);
+    assert.equal(validMountainArrayB([2, 1, 2, 3, 5, 7, 9, 10, 12, 14, 15, 16, 18, 14, 13]), false);
   });
 });
 
@@ -1051,9 +1150,11 @@ function replaceElements(arr: number[]): number[] {
   // Space complexity = O(1)
 }
 
-test('Replace Elements with Greatest Element on Right Side', () => {
-  assert.deepEqual(replaceElements([17, 18, 5, 4, 6, 1]), [18, 6, 6, 6, 1, -1]);
-  assert.deepEqual(replaceElements([400]), [-1]);
+describe('Replace Elements with Greatest Element on Right Side', () => {
+  it('should be deep equal', () => {
+    assert.deepEqual(replaceElements([17, 18, 5, 4, 6, 1]), [18, 6, 6, 6, 1, -1]);
+    assert.deepEqual(replaceElements([400]), [-1]);
+  });
 });
 
 /**
@@ -1098,27 +1199,50 @@ function moveZeroesB(nums: number[]): void {
   // Space complexity = O(1)
 }
 
-test('Move Zeroes', () => {
-  [moveZeroesA, moveZeroesB].forEach((func) => {
+describe('Move Zeroes', () => {
+  it('should be deep equal; moveZeroesA', () => {
     const arr1 = [0, 1, 0, 3, 12];
     const arr2 = [1, 0];
     const arr3 = [2, 1];
     const arr4 = [0];
     const arr5 = [1];
 
-    func(arr1);
+    moveZeroesA(arr1);
     assert.deepEqual(arr1, [1, 3, 12, 0, 0]);
 
-    func(arr2);
+    moveZeroesA(arr2);
     assert.deepEqual(arr2, [1, 0]);
 
-    func(arr3);
+    moveZeroesA(arr3);
     assert.deepEqual(arr3, [2, 1]);
 
-    func(arr4);
+    moveZeroesA(arr4);
     assert.deepEqual(arr4, [0]);
 
-    func(arr5);
+    moveZeroesA(arr5);
+    assert.deepEqual(arr5, [1]);
+  });
+
+  it('should be deep equal; moveZeroesB', () => {
+    const arr1 = [0, 1, 0, 3, 12];
+    const arr2 = [1, 0];
+    const arr3 = [2, 1];
+    const arr4 = [0];
+    const arr5 = [1];
+
+    moveZeroesB(arr1);
+    assert.deepEqual(arr1, [1, 3, 12, 0, 0]);
+
+    moveZeroesB(arr2);
+    assert.deepEqual(arr2, [1, 0]);
+
+    moveZeroesB(arr3);
+    assert.deepEqual(arr3, [2, 1]);
+
+    moveZeroesB(arr4);
+    assert.deepEqual(arr4, [0]);
+
+    moveZeroesB(arr5);
     assert.deepEqual(arr5, [1]);
   });
 });
@@ -1142,15 +1266,15 @@ function sortArrayByParity(nums: number[]): number[] {
   // Space complexity = O(1)
 }
 
-test('Sort Array By Parity', () => {
-  [sortArrayByParity].forEach((func) => {
+describe('Sort Array By Parity', () => {
+  it('should be deep equal', () => {
     const arr1 = [3, 1, 2, 4];
     const arr2 = [0];
 
-    func(arr1);
+    sortArrayByParity(arr1);
     assert.deepEqual(arr1, [2, 4, 3, 1]);
 
-    func(arr2);
+    sortArrayByParity(arr2);
     assert.deepEqual(arr2, [0]);
   });
 });
