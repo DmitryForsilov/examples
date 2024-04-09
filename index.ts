@@ -1045,8 +1045,27 @@ function moveZeroesA(nums: number[]): void {
   // Space complexity = O(1)
 }
 
+function moveZeroesB(nums: number[]): void {
+  let left = 0;
+
+  for (let right = 0; right < nums.length; right++) {
+    if (nums[right] !== 0) {
+      // shorthand of
+      // const temp = nums[left];
+      // nums[left] = nums[right];
+      // nums[right] = temp;
+      [nums[left], nums[right]] = [nums[right], nums[left]];
+
+      left += 1;
+    }
+  }
+
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+}
+
 test('Move Zeroes', () => {
-  [moveZeroesA].forEach((func) => {
+  [moveZeroesA, moveZeroesB].forEach((func) => {
     const arr1 = [0, 1, 0, 3, 12];
     const arr2 = [1, 0];
     const arr3 = [2, 1];
