@@ -1088,3 +1088,35 @@ test('Move Zeroes', () => {
     assert.deepEqual(arr5, [1]);
   });
 });
+
+/**
+ * Sort Array By Parity
+ */
+function sortArrayByParity(nums: number[]): number[] {
+  let left = 0;
+
+  for (let right = 0; right < nums.length; right++) {
+    if (nums[right] % 2 === 0) {
+      [nums[left], nums[right]] = [nums[right], nums[left]];
+      left += 1;
+    }
+  }
+
+  return nums;
+
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+}
+
+test('Sort Array By Parity', () => {
+  [sortArrayByParity].forEach((func) => {
+    const arr1 = [3, 1, 2, 4];
+    const arr2 = [0];
+
+    func(arr1);
+    assert.deepEqual(arr1, [2, 4, 3, 1]);
+
+    func(arr2);
+    assert.deepEqual(arr2, [0]);
+  });
+});
