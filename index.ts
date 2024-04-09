@@ -1278,3 +1278,38 @@ describe('Sort Array By Parity', () => {
     assert.deepEqual(arr2, [0]);
   });
 });
+
+/**
+ * Height Checker
+ */
+function heightChecker(heights: number[]): number {
+  const expectedHeights = [...heights].sort((a, b) => a - b);
+  let result = 0;
+
+  for (let i = 0; i < heights.length; i++) {
+    if (heights[i] !== expectedHeights[i]) {
+      result += 1;
+    }
+  }
+
+  return result;
+
+  // Time complexity = O(n^2 | logn)
+  // Space complexity = O(n)
+}
+
+describe('Height Checker', () => {
+  it('should be equal', () => {
+    // heights:  [1,1,4,2,1,3]
+    // expected: [1,1,1,2,3,4]
+    assert.equal(heightChecker([1, 1, 4, 2, 1, 3]), 3);
+
+    // heights:  [5,1,2,3,4]
+    // expected: [1,2,3,4,5]
+    assert.equal(heightChecker([5, 1, 2, 3, 4]), 5);
+
+    // heights:  [1,2,3,4,5]
+    // expected: [1,2,3,4,5]
+    assert.equal(heightChecker([1, 2, 3, 4, 5]), 0);
+  });
+});
