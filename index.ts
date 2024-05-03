@@ -1446,3 +1446,58 @@ describe('Find All Numbers Disappeared in an Array', () => {
     assert.deepEqual(findDisappearedNumbersC([1, 1]), [2]);
   });
 });
+
+/**
+ * Find value by keys sequence
+ */
+type Tree = {
+  [key: string]: Tree | number;
+};
+const findValueByKeysSequence = (tree: Tree, sequence: string): Tree | number | null => {
+  const keys = sequence.split('.');
+  let currentNode = tree;
+  let value: null | number = null;
+
+  for (let i = 0; i < keys.length; i++) {
+    const newValue = currentNode[keys[i]];
+
+    if (newValue === undefined) {
+      return null;
+    }
+
+    if (typeof newValue === 'object') {
+      currentNode = newValue;
+    } else {
+      value = newValue;
+    }
+  }
+
+  return value || currentNode;
+  // Time complexity = O(1)
+  // Space complexity = O(1)
+};
+
+describe('Find value by keys sequence', () => {
+  const tree = {
+    a: {
+      b: {
+        c: {
+          d: 1,
+        },
+      },
+    },
+  };
+
+  it('should be deep equal', () => {
+    assert.deepEqual(findValueByKeysSequence(tree, 'a.b.c'), { d: 1 });
+  });
+  it('should be equal', () => {
+    assert.equal(findValueByKeysSequence(tree, 'a.b.c.d'), 1);
+  });
+  it('should be equal', () => {
+    assert.equal(findValueByKeysSequence(tree, 'b'), null);
+  });
+  it('should be equal', () => {
+    assert.equal(findValueByKeysSequence(tree, 'a.b.c.d.e'), null);
+  });
+});
