@@ -1455,26 +1455,25 @@ type Tree = {
 };
 const findValueByKeysSequence = (tree: Tree, sequence: string): Tree | number | null => {
   const keys = sequence.split('.');
-  let currentNode = tree;
-  let value: null | number = null;
+  let currentValue: Tree | number = tree;
 
   for (let i = 0; i < keys.length; i++) {
-    const newValue = currentNode[keys[i]];
+    if (typeof currentValue === 'number') {
+      return null;
+    }
+
+    const newValue: Tree | number = currentValue[keys[i]];
 
     if (newValue === undefined) {
       return null;
     }
 
-    if (typeof newValue === 'object') {
-      currentNode = newValue;
-    } else {
-      value = newValue;
-    }
+    currentValue = newValue;
   }
 
-  return value || currentNode;
-  // Time complexity = O(1)
-  // Space complexity = O(1)
+  return currentValue;
+  // Time complexity = O(n)
+  // Space complexity = O(logn)
 };
 
 describe('Find value by keys sequence', () => {
