@@ -1448,60 +1448,6 @@ describe('Find All Numbers Disappeared in an Array', () => {
 });
 
 /**
- * Find value by keys sequence
- */
-type Tree = {
-  [key: string]: Tree | number;
-};
-const findValueByKeysSequence = (tree: Tree, sequence: string): Tree | number | null => {
-  const keys = sequence.split('.');
-  let currentValue: Tree | number = tree;
-
-  for (let i = 0; i < keys.length; i++) {
-    if (typeof currentValue === 'number') {
-      return null;
-    }
-
-    const newValue: Tree | number = currentValue[keys[i]];
-
-    if (newValue === undefined) {
-      return null;
-    }
-
-    currentValue = newValue;
-  }
-
-  return currentValue;
-  // Time complexity = O(n)
-  // Space complexity = O(logn)
-};
-
-describe('Find value by keys sequence', () => {
-  const tree = {
-    a: {
-      b: {
-        c: {
-          d: 1,
-        },
-      },
-    },
-  };
-
-  it('should be deep equal', () => {
-    assert.deepEqual(findValueByKeysSequence(tree, 'a.b.c'), { d: 1 });
-  });
-  it('should be equal', () => {
-    assert.equal(findValueByKeysSequence(tree, 'a.b.c.d'), 1);
-  });
-  it('should be equal', () => {
-    assert.equal(findValueByKeysSequence(tree, 'b'), null);
-  });
-  it('should be equal', () => {
-    assert.equal(findValueByKeysSequence(tree, 'a.b.c.d.e'), null);
-  });
-});
-
-/**
  * Sort By Bubble
  */
 const sortByBubble = (nums: number[]) => {
