@@ -138,3 +138,47 @@ describe('Test event loop', () => {
     }, 0);
   });
 });
+
+/**
+ * Calculate Sum of integers in string
+ */
+const calculateSumOfIntegers = (str: string) => {
+  let sum = 0;
+  let currentNumStr = '';
+
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+
+    if (typeof +char === 'number' && !Number.isNaN(+char)) {
+      if (str[i - 1] === '-') {
+        currentNumStr += '-';
+      }
+
+      currentNumStr += char;
+
+      if (i === str.length - 1) {
+        sum += +currentNumStr;
+        currentNumStr = '';
+      }
+    } else if (currentNumStr) {
+      sum += +currentNumStr;
+      currentNumStr = '';
+    }
+  }
+
+  return sum;
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+};
+
+describe('calculateSumOfIntegers', () => {
+  it('should be equal', () => {
+    assert.equal(calculateSumOfIntegers('The30quick20brown10f0x1203jumps914ov3r1349the102l4zy dog'), 3635);
+  });
+  it('should be equal', () => {
+    assert.equal(calculateSumOfIntegers('1  a-1b-20c-c-10-10'), -40);
+  });
+  it('should be equal', () => {
+    assert.equal(calculateSumOfIntegers(''), 0);
+  });
+});
