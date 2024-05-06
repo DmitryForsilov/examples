@@ -1500,3 +1500,53 @@ describe('Find value by keys sequence', () => {
     assert.equal(findValueByKeysSequence(tree, 'a.b.c.d.e'), null);
   });
 });
+
+/**
+ * Sort By Bubble
+ */
+const sortByBubble = (nums: number[]) => {
+  let isSwapped = false;
+  for (let i = 0; i < nums.length; i++) {
+    isSwapped = false;
+
+    for (let j = i + 1; j < nums.length; j++) {
+      if (nums[i] > nums[j]) {
+        [nums[i], nums[j]] = [nums[j], nums[i]];
+        isSwapped = true;
+      }
+    }
+
+    if (!isSwapped) {
+      return;
+    }
+  }
+  // Time complexity = O(n^2)
+  // Space complexity = O(1)
+};
+
+describe('Sort By Bubble', () => {
+  it('should be deep equal', () => {
+    const arr = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+
+    sortByBubble(arr);
+    assert.deepEqual(arr, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  });
+  it('should be deep equal', () => {
+    const arr = [6, 1, 2, 2, 0];
+
+    sortByBubble(arr);
+    assert.deepEqual(arr, [0, 1, 2, 2, 6]);
+  });
+  it('should be deep equal', () => {
+    const arr = [1, 2, 3, 4];
+
+    sortByBubble(arr);
+    assert.deepEqual(arr, [1, 2, 3, 4]);
+  });
+  it('should be deep equal', () => {
+    const arr = [4, 3, -2, -1, 0];
+
+    sortByBubble(arr);
+    assert.deepEqual(arr, [-2, -1, 0, 3, 4]);
+  });
+});
