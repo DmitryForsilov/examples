@@ -214,3 +214,56 @@ describe('calculateFactorial', () => {
     assert.equal(calculateFactorial(10), 3628800);
   });
 });
+
+/**
+ * Generate Fibonacci Sequence
+ */
+const generateFibonacciSequence = (count: number) => {
+  if (count === 0) {
+    return [];
+  }
+  if (count === 1) {
+    return [0];
+  }
+  if (count === 2) {
+    return [0, 1];
+  }
+
+  const sequence = [0, 1];
+  let firstNum = 0;
+  let secondNum = 1;
+
+  for (let i = 3; i <= count; i++) {
+    const nextNum = firstNum + secondNum;
+
+    firstNum = secondNum;
+    secondNum = nextNum;
+    sequence.push(nextNum);
+  }
+
+  return sequence;
+
+  // Time complexity = O(n)
+  // Space complexity = O(n)
+};
+
+describe('generateFibonacciSequence', () => {
+  it('should be deep equal', () => {
+    assert.deepEqual(generateFibonacciSequence(0), []);
+  });
+  it('should be deep equal', () => {
+    assert.deepEqual(generateFibonacciSequence(1), [0]);
+  });
+  it('should be deep equal', () => {
+    assert.deepEqual(generateFibonacciSequence(2), [0, 1]);
+  });
+  it('should be deep equal', () => {
+    assert.deepEqual(generateFibonacciSequence(3), [0, 1, 1]);
+  });
+  it('should be deep equal', () => {
+    assert.deepEqual(generateFibonacciSequence(6), [0, 1, 1, 2, 3, 5]);
+  });
+  it('should be deep equal', () => {
+    assert.deepEqual(generateFibonacciSequence(11), [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55]);
+  });
+});
