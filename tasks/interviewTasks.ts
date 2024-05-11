@@ -182,3 +182,35 @@ describe('calculateSumOfIntegers', () => {
     assert.equal(calculateSumOfIntegers(''), 0);
   });
 });
+
+/**
+ * Calculate factorial
+ */
+const calculateFactorial = (n: number) => {
+  if (n === 0) {
+    return 1;
+  }
+
+  let factorial = 1;
+
+  for (let i = 1; i <= n; i++) {
+    factorial *= i;
+  }
+
+  return factorial;
+
+  // Time complexity = O(n)
+  // Space complexity = O(1)
+};
+
+describe('calculateFactorial', () => {
+  it('should be equal', () => {
+    assert.equal(calculateFactorial(5), 120);
+  });
+  it('should be equal', () => {
+    assert.equal(calculateFactorial(0), 1);
+  });
+  it('should be equal', () => {
+    assert.equal(calculateFactorial(10), 3628800);
+  });
+});
