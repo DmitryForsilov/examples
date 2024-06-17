@@ -267,3 +267,44 @@ describe('generateFibonacciSequence', () => {
     assert.deepEqual(generateFibonacciSequence(11), [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55]);
   });
 });
+
+/**
+ * Add num infinity times
+ */
+
+const addNumInfinityTimes = (num?: number) => {
+  if (num === undefined) {
+    return 0;
+  }
+
+  let sum = num;
+
+  const addNextNum = (nextNum?: number) => {
+    if (nextNum === undefined) {
+      return sum;
+    }
+
+    sum += nextNum;
+
+    return addNextNum;
+  };
+
+  return addNextNum;
+};
+
+describe('addNumInfinityTimes', () => {
+  it('should be equal', () => {
+    assert.deepEqual(addNumInfinityTimes(), 0);
+  });
+  it('should be equal', () => {
+    const firstCall = addNumInfinityTimes(9) as (nextNum?: number) => {};
+
+    assert.deepEqual(firstCall(), 9);
+  });
+  it('should be equal', () => {
+    const firstCall = addNumInfinityTimes(9) as (nextNum?: number) => {};
+    const secondCall = firstCall(10) as (nextNum?: number) => {};
+
+    assert.deepEqual(secondCall(), 19);
+  });
+});
