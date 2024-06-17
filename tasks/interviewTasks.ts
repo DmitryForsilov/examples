@@ -308,3 +308,31 @@ describe('addNumInfinityTimes', () => {
     assert.deepEqual(secondCall(), 19);
   });
 });
+
+/**
+ * Check Is palindrome
+ */
+const checkIsPalindrome = (str: string) => {
+  let left = 0;
+  let right = str.length - 1;
+
+  while (left < right) {
+    if (str[left] !== str[right]) {
+      return false;
+    }
+
+    left += 1;
+    right -= 1;
+  }
+
+  return true;
+};
+
+describe('checkIsPalindrome', () => {
+  it('should be equal', () => {
+    assert.deepEqual(checkIsPalindrome('aabaa'), true);
+  });
+  it('should be equal', () => {
+    assert.deepEqual(checkIsPalindrome('aabaas'), false);
+  });
+});
