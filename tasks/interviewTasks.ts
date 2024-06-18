@@ -464,3 +464,43 @@ describe('checkIsDeepEqual', () => {
     assert.equal(checkIsDeepEqual(car1, car2), false);
   });
 });
+
+/**
+ * Sort Odd Numbers
+ */
+const sortOddNumbers = (nums: number[]) => {
+  let left = 0;
+  let right = nums.length - 1;
+
+  while (left < right) {
+    if (nums[left] % 2 !== 0 && nums[right] % 2 !== 0) {
+      if (nums[left] > nums[right]) {
+        [nums[left], nums[right]] = [nums[right], nums[left]];
+        right -= 1;
+      } else {
+        left += 1;
+      }
+    } else {
+      if (nums[left] % 2 === 0) {
+        left += 1;
+      } else if (nums[right] % 2 === 0) {
+        right -= 1;
+      }
+    }
+  }
+
+  return nums;
+};
+
+describe('sortOddNumbers', () => {
+  it('should be deep equal', () => {
+    const nums = [5, 4, 1, 6, 3, 8];
+
+    assert.deepEqual(sortOddNumbers(nums), [1, 4, 3, 6, 5, 8]);
+  });
+  it('should be deep equal', () => {
+    const nums = [3, 4, 7, 11, 9, 10];
+
+    assert.deepEqual(sortOddNumbers(nums), [3, 4, 7, 9, 11, 10]);
+  });
+});
