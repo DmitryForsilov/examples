@@ -330,9 +330,137 @@ const checkIsPalindrome = (str: string) => {
 
 describe('checkIsPalindrome', () => {
   it('should be equal', () => {
-    assert.deepEqual(checkIsPalindrome('aabaa'), true);
+    assert.equal(checkIsPalindrome('aabaa'), true);
   });
   it('should be equal', () => {
-    assert.deepEqual(checkIsPalindrome('aabaas'), false);
+    assert.equal(checkIsPalindrome('aabaas'), false);
+  });
+});
+
+/**
+ * Check is deep equal
+ */
+type Obj = { [key: string]: any };
+const checkIsDeepEqual = (obj1: Obj, obj2: Obj): boolean => {
+  const obj1Keys = Object.keys(obj1);
+  const obj2Keys = Object.keys(obj2);
+
+  if (obj1Keys.length !== obj2Keys.length) {
+    return false;
+  }
+
+  for (let i = 0; i < obj1Keys.length; i++) {
+    const firstValue = obj1[obj1Keys[i]];
+    const secondValue = obj2[obj1Keys[i]];
+
+    if (
+      typeof firstValue === 'object' &&
+      firstValue !== null &&
+      typeof secondValue === 'object' &&
+      secondValue !== null
+    ) {
+      return checkIsDeepEqual(firstValue, secondValue);
+    }
+
+    if (firstValue !== secondValue) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+describe('checkIsDeepEqual', () => {
+  const car1 = {
+    wheels: 4,
+    brake: 4,
+    speed: 200,
+    options: [{ key: '1', value: 'color' }],
+  };
+
+  it('should be equal', () => {
+    const car2 = {
+      wheels: 4,
+      brake: 4,
+      speed: 200,
+    };
+
+    assert.equal(checkIsDeepEqual(car1, car2), false);
+  });
+  it('should be equal', () => {
+    const car2 = {
+      wheels: null,
+      brake: 4,
+      speed: 200,
+      options: [{ key: '1', value: 'color' }],
+    };
+
+    assert.equal(checkIsDeepEqual(car1, car2), false);
+  });
+  it('should be equal', () => {
+    const car2 = {
+      wheels: 1,
+      brake: 4,
+      speed: 200,
+      options: [{ key: '1', value: 'color' }],
+    };
+
+    assert.equal(checkIsDeepEqual(car1, car2), false);
+  });
+  it('should be equal', () => {
+    const car2 = {
+      wheels: 4,
+      brake: 4,
+      speed: 200,
+      options: [{ key: '2', value: 'color' }],
+    };
+
+    assert.equal(checkIsDeepEqual(car1, car2), false);
+  });
+  it('should be equal', () => {
+    const car2 = {
+      wheels: 4,
+      brake: 4,
+      speed: 200,
+      options: [{ key: '2', value: null }],
+    };
+
+    assert.equal(checkIsDeepEqual(car1, car2), false);
+  });
+  it('should be equal', () => {
+    const car2 = {
+      wheels: 4,
+      brake: 4,
+      speed: 200,
+      options: [{ key: '2', value: 'color' }, { key: '2' }],
+    };
+
+    assert.equal(checkIsDeepEqual(car1, car2), false);
+  });
+  it('should be equal', () => {
+    const car2 = {
+      wheels: 4,
+      brake: 4,
+      speed: 200,
+      options: [{ key: '1', value: 'color' }],
+    };
+
+    assert.equal(checkIsDeepEqual(car1, car2), true);
+  });
+  it('should be equal', () => {
+    const car1 = {
+      wheels: null,
+      brake: 4,
+      speed: 200,
+      options: [{ key: '1', value: 'color' }],
+    };
+    const car2 = {
+      wheels: null,
+      brake: 4,
+      speed: 20,
+      options: [{ key: '1', value: 'color' }],
+    };
+
+    assert.equal(checkIsDeepEqual(car1, car2), false);
   });
 });
