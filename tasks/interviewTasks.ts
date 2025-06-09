@@ -504,3 +504,54 @@ describe('sortOddNumbers', () => {
     assert.deepEqual(sortOddNumbers(nums), [3, 4, 7, 9, 11, 10]);
   });
 });
+
+/**
+ * Event loop with variable
+ */
+const runEventLoopFunc = (writeLog: (data: { msg: string; a: number }) => void) => {
+  let a = 5;
+  setTimeout(function timeout() {
+    writeLog({ msg: '4 log, setTimout invoking', a });
+
+    a = 10;
+
+    writeLog({ msg: '5 log, setTimout invoking, after variable change', a });
+  }, 0);
+
+  let p = new Promise(function (resolve) {
+    writeLog({ msg: '1 log, Promise defining', a });
+
+    a = 25;
+    resolve(a);
+  });
+
+  p.then(function () {
+    a = 15;
+
+    writeLog({ msg: '3 log, promise resolving', a });
+  });
+
+  writeLog({ msg: '2 log, synchronous', a });
+};
+
+describe('Test event loop with variable', () => {
+  const log: { msg: string; a: number }[] = [];
+  const writeLog = (data: { msg: string; a: number }) => {
+    log.push(data);
+  };
+
+  runEventLoopFunc(writeLog);
+  console.log('--- log', log);
+
+  it('should be deep equal', () => {
+    setTimeout(() => {
+      assert.deepEqual(log, [
+        { msg: '1 log, Promise defining', a: 5 },
+        { msg: '2 log, synchronous', a: 25 },
+        { msg: '3 log, promise resolving', a: 15 },
+        { msg: '4 log, setTimout invoking', a: 15 },
+        { msg: '5 log, setTimout invoking, after variable change', a: 10 },
+      ]);
+    }, 0);
+  });
+});
