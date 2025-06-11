@@ -541,7 +541,6 @@ describe('Test event loop with variable', () => {
   };
 
   runEventLoopFunc(writeLog);
-  console.log('--- log', log);
 
   it('should be deep equal', () => {
     setTimeout(() => {
@@ -553,5 +552,98 @@ describe('Test event loop with variable', () => {
         { msg: '5 log, setTimout invoking, after variable change', a: 10 },
       ]);
     }, 0);
+  });
+});
+
+/**
+ * Make string
+ * написать функцию, либо последовательность операций, которая вернет результат следующих условий:
+ * 1) результат есть строка из сконкатенированных value элементов коллекции, расположенных в обратном порядке символов
+ * 2) результат собирается только из непросроченных записей и конкатенируется в порядке возрастания order
+ * 3) результат не содержит одинаковых символов
+ */
+
+const makeString = (
+  input: {
+    value: string;
+    order: number;
+    expired: boolean;
+  }[],
+) => {
+  // a) variant
+  // const hashMap: { [key: string]: number } = {};
+  //
+  // return input
+  //   .filter((entry) => !entry.expired)
+  //   .map((entry) => ({ ...entry, value: entry.value.split('').reverse().join('') }))
+  //   .sort((a, b) => a.order - b.order)
+  //   .reduce((acc, entry) => {
+  //     acc += entry.value;
+  //
+  //     return acc;
+  //   }, '')
+  //   .split('')
+  //   .reduce((acc, char) => {
+  //     if (!hashMap[char]) {
+  //       acc.push(char);
+  //       hashMap[char] = 1;
+  //     }
+  //
+  //     return acc;
+  //   }, [] as string[])
+  //   .join('');
+
+  // b) variant
+  const stringWithNotUniqueChars = input
+    .filter((entry) => !entry.expired)
+    .map((entry) => ({ ...entry, value: entry.value.split('').reverse().join('') }))
+    .sort((a, b) => a.order - b.order)
+    .reduce((acc, entry) => {
+      acc += entry.value;
+
+      return acc;
+    }, '');
+
+  return Array.from(new Set(stringWithNotUniqueChars)).join('');
+};
+
+describe('Test make string', () => {
+  it('should be equal', () => {
+    const input = [
+      { value: 'abcd', order: 4, expired: true },
+      { value: 'qwer', order: 2, expired: false },
+      { value: 'xyz1', order: 1, expired: true },
+      { value: 'abx2', order: 3, expired: true },
+    ];
+
+    const output = makeString(input);
+
+    assert.equal(output, 'rewq');
+  });
+
+  it('should be equal', () => {
+    const input = [
+      { value: 'abcd', order: 4, expired: false },
+      { value: 'qwer', order: 2, expired: true },
+      { value: 'xyz1', order: 1, expired: false },
+      { value: 'abx2', order: 3, expired: false },
+    ];
+
+    const output = makeString(input);
+
+    assert.equal(output, '1zyx2badc');
+  });
+
+  it('should be equal', () => {
+    const input = [
+      { value: 'abcd', order: 4, expired: false },
+      { value: 'qwer', order: 2, expired: false },
+      { value: 'xyz1', order: 1, expired: false },
+      { value: 'abx2', order: 3, expired: false },
+    ];
+
+    const output = makeString(input);
+
+    assert.equal(output, '1zyxrewq2badc');
   });
 });
