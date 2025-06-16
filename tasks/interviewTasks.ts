@@ -787,3 +787,79 @@ describe('Test get ranges', () => {
     assert.deepEqual(getRanges(input), '1, 4');
   });
 });
+
+/**
+ * My promise any
+ * На входе массив промисов
+ * Резолв с первым зарезолвленным промисом.
+ * Реджект, если упали все промисы.
+ * В случае реджекта, порядок ошибок должен сохраниться.
+ * В случае резолва не должен дожидаться выполнения остальных промисов.
+ */
+const myPromiseAny = (promises: Promise<any>[], writeLog: (msg: any) => void) => {
+  const promiseAny = (promises: Promise<any>[]) => {
+    const errors: any[] = [];
+
+    return new Promise((resolve, reject) => {
+      promises.forEach((promise, index) => {
+        promise.then(resolve).catch((error: any) => {
+          errors.push(error);
+
+          if (errors.length === promises.length) {
+            reject({ errors });
+          }
+        });
+      });
+    });
+  };
+
+  promiseAny(promises)
+    .then((value) => writeLog(value))
+    .catch((err) => {
+      err.errors.forEach(writeLog);
+    });
+};
+
+describe('Test my promise any', () => {
+  it('should be deep equal', () => {
+    const log: string[] = [];
+    const writeLog = (msg: string) => {
+      log.push(msg);
+    };
+
+    const promise1 = new Promise((_, reject) => setTimeout(reject, 0, 'error'));
+    const promise2 = new Promise((resolve) => setTimeout(resolve, 1, 'quick'));
+    const promise3 = new Promise((resolve) => setTimeout(resolve, 2, 'slow'));
+
+    const promises = [promise1, promise2, promise3];
+
+    myPromiseAny(promises, writeLog);
+
+    setTimeout(() => {
+      assert.deepEqual(log, ['quick']);
+    }, 0);
+  });
+
+  it('should be deep equal', () => {
+    const log: string[] = [];
+    const writeLog = (msg: string) => {
+      log.push(msg);
+    };
+
+    const promise1 = new Promise((_, reject) => setTimeout(reject, 0, 'error 1'));
+    const promise2 = new Promise((_, reject) => setTimeout(reject, 0, 'error 2'));
+    const promise3 = new Promise((_, reject) => setTimeout(reject, 0, 'error 3'));
+
+    const promises = [promise1, promise2, promise3];
+
+    myPromiseAny(promises, writeLog);
+
+    setTimeout(() => {
+      assert.deepEqual(log, ['error 1', 'error 2', 'error 3']);
+    }, 0);
+  });
+});
+
+/**
+ * TODO promise all, promise race и тп
+ */
