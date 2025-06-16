@@ -710,7 +710,6 @@ describe('Test value by path', () => {
 /**
  * Sort even numbers
  */
-
 const sortEvenNumbers = (nums: number[]) => {
   const evenIndexes: number[] = [];
   const sortedOnlyEven = nums
@@ -734,5 +733,57 @@ describe('Test sort even numbers', () => {
     const input = [3, 8, 2, 1, 5, 6, 4, 9, 7];
 
     assert.deepEqual(sortEvenNumbers(input), [3, 2, 4, 1, 5, 6, 8, 9, 7]);
+  });
+});
+
+/**
+ * Get ranges
+ * Дан список чисел, повторяющихся элементов в списке нет.
+ * Нужно преобразовать это множество в строку, сворячивая соседние по числовому ряду числа в диапазоны.
+ */
+
+const getRanges = (nums: number[]) => {
+  const sortedNums = nums.sort((a, b) => a - b);
+  const ranges = [];
+
+  let start: number | null = null;
+  let end: number | null = null;
+
+  for (let i = 0; i < sortedNums.length; i++) {
+    const currNum = sortedNums[i];
+    const nextNum = sortedNums[i + 1];
+
+    if (start === null) {
+      start = currNum;
+    }
+
+    if (currNum === nextNum - 1) {
+      end = nextNum;
+    } else {
+      end === null ? ranges.push(`${start}`) : ranges.push(`${start}-${end}`);
+
+      start = nextNum;
+      end = null;
+    }
+  }
+
+  return ranges.join(', ');
+};
+
+describe('Test get ranges', () => {
+  it('should be equal', () => {
+    const input = [1, 4, 5, 2, 3, 9, 8, 11, 0];
+
+    assert.deepEqual(getRanges(input), '0-5, 8-9, 11');
+  });
+  it('should be equal', () => {
+    const input = [1, 4, 3, 2];
+
+    assert.deepEqual(getRanges(input), '1-4');
+  });
+  it('should be equal', () => {
+    const input = [1, 4];
+
+    assert.deepEqual(getRanges(input), '1, 4');
   });
 });
