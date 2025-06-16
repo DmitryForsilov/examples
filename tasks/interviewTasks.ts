@@ -647,3 +647,62 @@ describe('Test make string', () => {
     assert.equal(output, '1zyxrewq2badc');
   });
 });
+
+/**
+ * Get value by path
+ * Написат функцию get, на вход функция принимает объект и путь до поля.
+ * Путь это строка, разделенная точкой. Функция должна вернуть соответствующее поле объекта или null, если поля нет.
+ */
+
+const getValueByPath = (object: object, path: string) => {
+  return path.split('.').reduce((acc, key) => {
+    if (typeof acc === 'object' && acc !== null && acc.hasOwnProperty(key)) {
+      return acc[key];
+    } else {
+      return null;
+    }
+  }, object as any);
+
+  // более подробный вариант
+  // const keys = path.split('.')
+  // let currentValue: any = object
+  //
+  // for (let i = 0; i < keys.length; i++) {
+  //   if (typeof currentValue  === 'object' && currentValue !== null && currentValue.hasOwnProperty(keys[i])) {
+  //     currentValue = currentValue[keys[i]]
+  //   } else {
+  //     return null
+  //   }
+  // }
+  //
+  // return currentValue
+};
+
+describe('Test value by path', () => {
+  const input = {
+    a: {
+      b: {
+        c: 'd',
+      },
+      e: 'f',
+    },
+
+    z: null,
+  };
+
+  it('should be deep equal', () => {
+    assert.deepEqual(getValueByPath(input, 'a.b'), { c: 'd' });
+  });
+  it('should be equal', () => {
+    assert.deepEqual(getValueByPath(input, 'a.b.c'), 'd');
+  });
+  it('should be equal', () => {
+    assert.deepEqual(getValueByPath(input, 'a.e'), 'f');
+  });
+  it('should be equal', () => {
+    assert.equal(getValueByPath(input, 'a.f'), null);
+  });
+  it('should be equal', () => {
+    assert.equal(getValueByPath(input, 'z.x'), null);
+  });
+});
