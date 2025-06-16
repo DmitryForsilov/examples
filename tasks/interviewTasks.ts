@@ -706,3 +706,33 @@ describe('Test value by path', () => {
     assert.equal(getValueByPath(input, 'z.x'), null);
   });
 });
+
+/**
+ * Sort even numbers
+ */
+
+const sortEvenNumbers = (nums: number[]) => {
+  const evenIndexes: number[] = [];
+  const sortedOnlyEven = nums
+    .filter((num, index) => {
+      if (num % 2 === 0) {
+        evenIndexes.push(index);
+      }
+      return num % 2 === 0;
+    })
+    .sort((a, b) => a - b);
+
+  evenIndexes.forEach((index, currIndex) => {
+    nums[index] = sortedOnlyEven[currIndex];
+  });
+
+  return nums;
+};
+
+describe('Test sort even numbers', () => {
+  it('should be deep equal', () => {
+    const input = [3, 8, 2, 1, 5, 6, 4, 9, 7];
+
+    assert.deepEqual(sortEvenNumbers(input), [3, 2, 4, 1, 5, 6, 8, 9, 7]);
+  });
+});
