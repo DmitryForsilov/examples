@@ -796,17 +796,17 @@ describe('Test get ranges', () => {
  * В случае реджекта, порядок ошибок должен сохраниться.
  * В случае резолва не должен дожидаться выполнения остальных промисов.
  */
-const promiseAny = (promises: unknown[]) => {
+const promiseAny = (values: unknown[]) => {
   const errors: any[] = [];
 
   return new Promise((resolve, reject) => {
-    promises.forEach((promise) => {
-      Promise.resolve(promise)
+    values.forEach((value) => {
+      Promise.resolve(value)
         .then(resolve)
         .catch((error: any) => {
           errors.push(error);
 
-          if (errors.length === promises.length) {
+          if (errors.length === values.length) {
             reject(new AggregateError(errors, 'All promises were rejected'));
           }
         });
@@ -814,9 +814,9 @@ const promiseAny = (promises: unknown[]) => {
   });
 };
 
-const runMyPromiseAny = (promises: unknown[], writeLog: (msg: any) => void) => {
-  promiseAny(promises)
-    .then((value) => writeLog(value))
+const runMyPromiseAny = (values: unknown[], writeLog: (msg: any) => void) => {
+  promiseAny(values)
+    .then((result) => writeLog(result))
     .catch((err) => {
       err.errors.forEach(writeLog);
     });
@@ -830,11 +830,17 @@ describe('Test my promise any', () => {
     FORTH: 3,
   };
 
-  it('get first resolved promise', () => {
+  const getLogAndWriteLog = () => {
     const log: string[] = [];
     const writeLog = (msg: string) => {
       log.push(msg);
     };
+
+    return { log, writeLog };
+  };
+
+  it('get first resolved promise', () => {
+    const { log, writeLog } = getLogAndWriteLog();
 
     const promise1 = new Promise((_, reject) => setTimeout(reject, ORDERS.FIRST, 'error'));
     const promise2 = new Promise((resolve) => setTimeout(resolve, ORDERS.SECOND, 'quick'));
@@ -850,10 +856,7 @@ describe('Test my promise any', () => {
   });
 
   it('get all rejected promises', () => {
-    const log: string[] = [];
-    const writeLog = (msg: string) => {
-      log.push(msg);
-    };
+    const { log, writeLog } = getLogAndWriteLog();
 
     const promise1 = new Promise((_, reject) => setTimeout(reject, ORDERS.FIRST, 'error 1'));
     const promise2 = new Promise((_, reject) => setTimeout(reject, ORDERS.SECOND, 'error 2'));
@@ -869,14 +872,11 @@ describe('Test my promise any', () => {
   });
 
   it('get first resolved non promise value', () => {
-    const log: string[] = [];
-    const writeLog = (msg: string) => {
-      log.push(msg);
-    };
+    const { log, writeLog } = getLogAndWriteLog();
 
-    const promises = [1, 2, 3];
+    const values = [1, 2, 3];
 
-    runMyPromiseAny(promises, writeLog);
+    runMyPromiseAny(values, writeLog);
 
     setTimeout(() => {
       assert.deepEqual(log, [1]);
@@ -887,16 +887,16 @@ describe('Test my promise any', () => {
 /**
  * My promise all
  */
-const myPromiseAll = (promises: unknown[]) => {
+const myPromiseAll = (values: unknown[]) => {
   const results: unknown[] = [];
 
   return new Promise((resolve, reject) => {
-    promises.forEach((promise) => {
-      Promise.resolve(promise)
-        .then((value) => {
-          results.push(value);
+    values.forEach((value) => {
+      Promise.resolve(value)
+        .then((result) => {
+          results.push(result);
 
-          if (results.length === promises.length) {
+          if (results.length === values.length) {
             resolve(results);
           }
         })
@@ -905,9 +905,9 @@ const myPromiseAll = (promises: unknown[]) => {
   });
 };
 
-const runMyPromiseAll = (promises: unknown[], writeLog: (msg: any) => void) => {
-  myPromiseAll(promises)
-    .then((values) => (values as unknown[]).forEach(writeLog))
+const runMyPromiseAll = (values: unknown[], writeLog: (msg: any) => void) => {
+  myPromiseAll(values)
+    .then((results) => (results as unknown[]).forEach(writeLog))
     .catch((err) => {
       writeLog(err);
     });
@@ -921,11 +921,17 @@ describe('Test my promise all', () => {
     FORTH: 3,
   };
 
-  it('all resolved promises', () => {
+  const getLogAndWriteLog = () => {
     const log: string[] = [];
     const writeLog = (msg: string) => {
       log.push(msg);
     };
+
+    return { log, writeLog };
+  };
+
+  it('all resolved promises', () => {
+    const { log, writeLog } = getLogAndWriteLog();
 
     const promise1 = new Promise((resolve) => setTimeout(resolve, ORDERS.FIRST, '1 resolved'));
     const promise2 = new Promise((resolve) => setTimeout(resolve, ORDERS.SECOND, '2 resolved'));
@@ -941,10 +947,7 @@ describe('Test my promise all', () => {
   });
 
   it('two of three promises are rejected', () => {
-    const log: string[] = [];
-    const writeLog = (msg: string) => {
-      log.push(msg);
-    };
+    const { log, writeLog } = getLogAndWriteLog();
 
     const promise1 = new Promise((resolve) => setTimeout(resolve, ORDERS.FIRST, 'first resolved'));
     const promise2 = new Promise((_, reject) => setTimeout(reject, ORDERS.SECOND, 'error 1'));
@@ -960,17 +963,120 @@ describe('Test my promise all', () => {
   });
 
   it('all resolved non promises', () => {
-    const log: string[] = [];
-    const writeLog = (msg: string) => {
-      log.push(msg);
-    };
+    const { log, writeLog } = getLogAndWriteLog();
 
-    const promises = [1, 2, 3];
+    const values = [1, 2, 3];
 
-    runMyPromiseAll(promises, writeLog);
+    runMyPromiseAll(values, writeLog);
 
     setTimeout(() => {
       assert.deepEqual(log, [1, 2, 3]);
+    }, ORDERS.FIRST);
+  });
+});
+
+/**
+ * My promise allSettled
+ */
+const myPromiseAllSettled = (values: unknown[]) => {
+  const results: { status: string; value?: unknown; reason?: string }[] = [];
+
+  return new Promise((resolve, reject) => {
+    values.forEach((value) => {
+      Promise.resolve(value)
+        .then((result) => {
+          results.push({ status: 'fulfilled', value: result });
+        })
+        .catch((error) => {
+          results.push({ status: 'rejected', reason: error });
+        })
+        .finally(() => {
+          if (results.length === values.length) {
+            resolve(results);
+          }
+        });
+    });
+  });
+};
+
+const runMyPromiseAllSettled = (values: unknown[], writeLog: (msg: any) => void) => {
+  myPromiseAllSettled(values)
+    .then((results) => (results as unknown[]).forEach(writeLog))
+    .catch((err) => {
+      writeLog(err);
+    });
+};
+
+describe('Test my promise allSettled', () => {
+  const ORDERS = {
+    FIRST: 0,
+    SECOND: 1,
+    THIRD: 2,
+    FORTH: 3,
+  };
+
+  const getLogAndWriteLog = () => {
+    const log: { status: string; value?: unknown; reason?: string }[] = [];
+    const writeLog = (data: { status: string; value?: unknown; reason?: string }) => {
+      log.push(data);
+    };
+
+    return { log, writeLog };
+  };
+
+  it('all resolved promises', () => {
+    const { log, writeLog } = getLogAndWriteLog();
+
+    const promise1 = new Promise((resolve) => setTimeout(resolve, ORDERS.FIRST, '1 resolved'));
+    const promise2 = new Promise((resolve) => setTimeout(resolve, ORDERS.SECOND, '2 resolved'));
+    const promise3 = new Promise((resolve) => setTimeout(resolve, ORDERS.THIRD, '3 resolved'));
+
+    const promises = [promise1, promise2, promise3];
+
+    runMyPromiseAllSettled(promises, writeLog);
+
+    setTimeout(() => {
+      assert.deepEqual(log, [
+        { status: 'fulfilled', value: '1 resolved' },
+        { status: 'fulfilled', value: '2 resolved' },
+        { status: 'fulfilled', value: '3 resolved' },
+      ]);
+    }, ORDERS.FORTH);
+  });
+
+  it('two of three promises are rejected', () => {
+    const { log, writeLog } = getLogAndWriteLog();
+
+    const promise1 = new Promise((resolve) => setTimeout(resolve, ORDERS.FIRST, '1 resolved'));
+    const promise2 = new Promise((_, reject) => setTimeout(reject, ORDERS.SECOND, 'error 1'));
+    const promise3 = new Promise((_, reject) => setTimeout(reject, ORDERS.THIRD, 'error 2'));
+
+    const promises = [promise1, promise2, promise3];
+
+    runMyPromiseAllSettled(promises, writeLog);
+
+    setTimeout(() => {
+      assert.deepEqual(log, [
+        { status: 'fulfilled', value: '1 resolved' },
+        { status: 'rejected', reason: 'error 1' },
+        { status: 'rejected', reason: 'error 2' },
+      ]);
+    }, ORDERS.FORTH);
+  });
+
+  it('all resolved non promises', () => {
+    const { log, writeLog } = getLogAndWriteLog();
+
+    const values = [1, 2, 3];
+
+    runMyPromiseAllSettled(values, writeLog);
+
+    setTimeout(() => {
+      assert.deepEqual(log, [
+        { status: 'fulfilled', value: 1 },
+        { status: 'fulfilled', value: 2 },
+        { status: 'fulfilled', value: 3 },
+      ]);
     }, ORDERS.FIRST);
   });
 });
