@@ -1,14 +1,15 @@
 {
+  "type": "module",
   "devDependencies": {
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "prettier": "3.2.5",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.4.3"
+    "ts-node": "10.9.2",
+    "typescript": "5.8.3"
   },
   "scripts": {
     "prepare": "husky",
-    "test": "npx ts-node tasks/leetcodeTasks.ts && npx ts-node tasks/interviewTasks.ts"
+    "test": "npx node --loader ts-node/esm tasks/interviewTasks.ts && npx node --loader ts-node/esm tasks/leetcodeTasks.ts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css,md}": "prettier --write"
