@@ -1080,3 +1080,80 @@ describe('Test my promise allSettled', () => {
     }, ORDERS.FIRST);
   });
 });
+
+/**
+ * My promise race
+ */
+const myPromiseRace = (values: unknown[]) => {
+  return new Promise((resolve, reject) => {
+    values.forEach((value) => {
+      Promise.resolve(value).then(resolve).catch(reject);
+    });
+  });
+};
+
+const runMyPromiseRace = (values: unknown[], writeLog: (msg: any) => void) => {
+  myPromiseRace(values).then(writeLog).catch(writeLog);
+};
+
+describe('Test my promise race', () => {
+  const ORDERS = {
+    FIRST: 0,
+    SECOND: 1,
+    THIRD: 2,
+    FORTH: 3,
+  };
+
+  const getLogAndWriteLog = () => {
+    const log: string[] = [];
+    const writeLog = (msg: string) => {
+      log.push(msg);
+    };
+
+    return { log, writeLog };
+  };
+
+  it('all resolved promises', () => {
+    const { log, writeLog } = getLogAndWriteLog();
+
+    const promise1 = new Promise((resolve) => setTimeout(resolve, ORDERS.FIRST, '1 resolved'));
+    const promise2 = new Promise((resolve) => setTimeout(resolve, ORDERS.SECOND, '2 resolved'));
+    const promise3 = new Promise((resolve) => setTimeout(resolve, ORDERS.THIRD, '3 resolved'));
+
+    const promises = [promise1, promise2, promise3];
+
+    runMyPromiseRace(promises, writeLog);
+
+    setTimeout(() => {
+      assert.deepEqual(log, ['1 resolved']);
+    }, ORDERS.FORTH);
+  });
+
+  it('fastest promise rejected', () => {
+    const { log, writeLog } = getLogAndWriteLog();
+
+    const promise1 = new Promise((_, reject) => setTimeout(reject, ORDERS.FIRST, 'error 1'));
+    const promise2 = new Promise((resolve) => setTimeout(resolve, ORDERS.SECOND, '2 resolved'));
+    const promise3 = new Promise((resolve) => setTimeout(resolve, ORDERS.THIRD, '3 resolved'));
+
+    const promises = [promise1, promise2, promise3];
+
+    runMyPromiseRace(promises, writeLog);
+
+    setTimeout(() => {
+      assert.deepEqual(log, ['error 1']);
+    }, ORDERS.FORTH);
+  });
+
+  it('all resolved non promises', () => {
+    const { log, writeLog } = getLogAndWriteLog();
+
+    const values = [1, 2, 3];
+
+    runMyPromiseRace(values, writeLog);
+
+    setTimeout(() => {
+      assert.deepEqual(log, [1]);
+    }, ORDERS.FIRST);
+  });
+});
