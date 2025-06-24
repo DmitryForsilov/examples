@@ -1157,3 +1157,32 @@ describe('Test my promise race', () => {
     }, ORDERS.FIRST);
   });
 });
+
+/**
+ * Go all
+ */
+const goAll = (...funcs: Array<(...args: any[]) => any>) => {
+  return (...initialArgs: unknown[]) => {
+    const initialResult = funcs[funcs.length - 1](...initialArgs);
+
+    return funcs.reduceRight((acc, currFunc, currentIndex) => {
+      if (currentIndex === funcs.length - 1) {
+        return acc;
+      }
+
+      return currFunc(acc);
+    }, initialResult);
+  };
+};
+
+describe('Test go all', () => {
+  it('should be equal', () => {
+    const multiply = (a: number, b: number) => a * b;
+    const sqr = (a: number) => a ** 2;
+    const plusThree = (a: number) => a + 3;
+
+    const actual = goAll(plusThree, sqr, multiply)(2, 5);
+
+    assert.equal(actual, 103);
+  });
+});
