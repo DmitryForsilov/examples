@@ -1186,3 +1186,76 @@ describe('Test go all', () => {
     assert.equal(actual, 103);
   });
 });
+
+/**
+ * CounterObject
+ * Реализуйте функцию createCounter(init), которая создаёт объект счётчика с методами для увеличения, уменьшения и сброса значения.
+ *
+ * Формат ввода
+ * Вы должны экспортировать функцию createCounter, которая принимает один аргумент:
+ *
+ * init — начальное значение счётчика (число).
+ * Формат вывода
+ * Функция должна вернуть объект со следующими методами:
+ *
+ * increment() — увеличивает значение счётчика на 1 и возвращает новое значение
+ * decrement() — уменьшает значение счётчика на 1 и возвращает новое значение
+ * reset() — сбрасывает значение счётчика до начального и возвращает его
+ */
+
+const createCounterObject = (init: number) => {
+  // Ваше решение
+  let value = init;
+
+  const increment = () => {
+    value += 1;
+    return value;
+  };
+
+  const decrement = () => {
+    value -= 1;
+    return value;
+  };
+
+  const reset = () => {
+    value = init;
+    return value;
+  };
+
+  return {
+    increment,
+    decrement,
+    reset,
+  };
+};
+
+describe('Test CounterObject', () => {
+  it('Should be equal', () => {
+    const counter = createCounterObject(5);
+
+    assert.strictEqual(counter.increment(), 6);
+    assert.strictEqual(counter.reset(), 5);
+    assert.strictEqual(counter.decrement(), 4);
+  });
+
+  it('Should be equal', () => {
+    const counter = createCounterObject(0);
+
+    assert.strictEqual(counter.increment(), 1);
+    assert.strictEqual(counter.increment(), 2);
+    assert.strictEqual(counter.increment(), 3);
+    assert.strictEqual(counter.decrement(), 2);
+    assert.strictEqual(counter.reset(), 0);
+    assert.strictEqual(counter.decrement(), -1);
+  });
+
+  it('Should be equal', () => {
+    const counter = createCounterObject(100);
+
+    assert.strictEqual(counter.decrement(), 99);
+    assert.strictEqual(counter.decrement(), 98);
+    assert.strictEqual(counter.reset(), 100);
+    assert.strictEqual(counter.increment(), 101);
+    assert.strictEqual(counter.increment(), 102);
+  });
+});
