@@ -311,13 +311,23 @@ describe('addNumInfinityTimes', () => {
 
 /**
  * Check Is palindrome
+ * Напишите функцию isPalindrome, которая проверяет, является ли заданная строка палиндромом. Палиндромом считается строка, которая одинаково читается как слева направо, так и справа налево, при этом игнорируются пробелы, знаки препинания и регистр символов.
+ *
+ * Формат ввода
+ * На вход подаётся строка (1≤∣s∣≤200000), которая может содержать буквы английского алфавита, цифры, пробелы и специальные символы
+ *
+ * Формат вывода
+ * Верните true, если строка
+ * s
+ * s является палиндромом, иначе — false
  */
 const checkIsPalindrome = (str: string) => {
+  const filteredStr = str.replace(/[^a-zA-Z0-9]/g, '');
   let left = 0;
-  let right = str.length - 1;
+  let right = filteredStr.length - 1;
 
   while (left < right) {
-    if (str[left] !== str[right]) {
+    if (filteredStr[left].toLowerCase() !== filteredStr[right].toLowerCase()) {
       return false;
     }
 
@@ -334,6 +344,15 @@ describe('checkIsPalindrome', () => {
   });
   it('should be equal', () => {
     assert.equal(checkIsPalindrome('aabaas'), false);
+  });
+  it('should be equal', () => {
+    assert.equal(checkIsPalindrome('Do geese see God?'), true);
+  });
+  it('should be equal', () => {
+    assert.equal(checkIsPalindrome('Hello, world!'), false);
+  });
+  it('should be equal', () => {
+    assert.equal(checkIsPalindrome('Madam, I’m Adam'), true);
   });
 });
 
