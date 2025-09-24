@@ -1583,3 +1583,37 @@ describe('memoizeFn', () => {
     assert.deepEqual(calls[1], { args: stringifyArgs([1, 2]), result: 3, invoked: false });
   });
 });
+
+/**
+ * Curry
+ */
+const curry = <Args extends unknown[], Return extends unknown>(fn: (...args: Args) => Return) => {
+  // @ts-ignore
+  const allArgs: Args = [];
+
+  const inner = (...args: Args) => {
+    allArgs.push(...args);
+
+    if (allArgs.length === fn.length) {
+      // @ts-ignore
+      return fn(...allArgs);
+    }
+    return inner;
+  };
+
+  return inner;
+};
+
+describe('Test Curry', () => {
+  const sum = (a: number, b: number, c: number) => {
+    return a + b + c;
+  };
+
+  it('Should be equal', () => {
+    assert.equal(curry(sum)(1, 2, 3), 6);
+    // @ts-ignore
+    assert.equal(curry(sum)(1, 2)(3), 6);
+    // @ts-ignore
+    assert.equal(curry(sum)(1)(2)(3), 6);
+  });
+});
