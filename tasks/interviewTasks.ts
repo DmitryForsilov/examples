@@ -1259,3 +1259,48 @@ describe('Test CounterObject', () => {
     assert.strictEqual(counter.increment(), 102);
   });
 });
+
+/**
+ * splitWordsBySeparator
+ * Необходимо написать функцию, которая разделит каждую строку в массиве words по строке separator. Необходимо вернуть массив получившихся после разделения строк, исключая пустые строки
+ *
+ * Формат ввода
+ * Вы должны экспортировать функцию splitWordsBySeparator, которая принимает на вход два аргумента:
+ *
+ * words — массив строк, которые нужно разбить. Длина массива не превышает 3 x 10^5 элементов. Длина каждой строки в массиве не превышает 10^7 символов.
+ *
+ * separator — строка-разделитель, может иметь произвольную длину
+ *
+ * Формат вывода
+ * Функция должна возвращать массив строк, который является результатом выполнения "разделения". Он не должен содержать пустых строк
+ */
+
+const splitWordsBySeparator = (words: string[], separator: string) => {
+  // Ваше решение
+  return words.reduce((acc, word) => {
+    const splitWords = word.split(separator).filter(Boolean);
+
+    splitWords.forEach((splitWord) => {
+      acc.push(splitWord);
+    });
+
+    return acc;
+  }, [] as string[]);
+};
+
+describe('splitWordsBySeparator', () => {
+  it('Should be deep equal', () => {
+    const result = splitWordsBySeparator(['one.two.three', 'four.five', 'six'], '.');
+    assert.deepEqual(result, ['one', 'two', 'three', 'four', 'five', 'six']);
+  });
+
+  it('Should be deep equal', () => {
+    const result = splitWordsBySeparator(['1/', '/2', '/'], '/');
+    assert.deepEqual(result, ['1', '2']);
+  });
+
+  it('Should be deep equal', () => {
+    const result = splitWordsBySeparator(['', 'a.b', ''], '.');
+    assert.deepEqual(result, ['a', 'b']);
+  });
+});
