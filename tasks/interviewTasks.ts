@@ -1362,3 +1362,121 @@ describe('addTwoPromises', () => {
     assert.equal(result, 12);
   });
 });
+
+/**
+ * fetchWithAutoRetry
+ * Напишите функцию fetchWithAutoRetry(fetcher, count), которая делает запрос с помощью переданной функции fetcher и автоматически повторяет его в случае ошибки.
+ *
+ * Формат ввода
+ * Вы должны экспортировать асинхронную функцию fetchWithAutoRetry, которая принимает на вход два аргумента:
+ *
+ * fetcher — асинхронная функция, которую нужно использовать для выполнения запроса;
+ * count — количество дополнительных запросов, которое нужно сделать, если fetcher вернёт ошибку.
+ * Требования:
+ *
+ * Если все запросы завершились ошибкой, необходимо выбросить последнюю ошибку, в противном случае — первое успешное значение.
+ * Запросы должны выполняться последовательно, запуск нескольких параллельных запросов запрещён.
+ * Нельзя вызывать fetcher больше, чем count+1 раз.
+ * Нельзя вызывать fetcher, если уже был получен успешный ответ.
+ * Формат вывода
+ * Функция должна возвращать Promise, который:
+ *
+ * или разрешается с результатом первого успешного вызова fetcher,
+ * или выбрасывает последнюю полученную ошибку, если все попытки завершились неудачей.
+ */
+
+/**
+ * Создаёт мок функции fetcher,
+ * который по порядку возвращает
+ * ответы из массива responses
+ */
+const createFetcherMock = (responses: Array<{ error?: string; data?: string }>) => {
+  let counter = 0;
+  let isLoading = false;
+
+  return async () => {
+    if (isLoading) {
+      throw new Error('429 Too Many Requests');
+    }
+
+    const response = responses[counter % responses.length];
+    isLoading = true;
+
+    await new Promise((resolve) => setTimeout(resolve, 10 * Math.random()));
+
+    isLoading = false;
+    counter++;
+
+    return response.error ? Promise.reject(response.error) : Promise.resolve(response.data);
+  };
+};
+
+const fetchWithAutoRetry = async (fetcher: ReturnType<typeof createFetcherMock>, count: number) => {
+  // Ваше решение
+  let requestsCount = 0;
+
+  const fetchData = async () => {
+    requestsCount += 1;
+
+    try {
+      const data = await fetcher();
+      return data;
+    } catch (error) {
+      if (requestsCount === count + 1) {
+        throw error;
+      }
+
+      return fetchData();
+    }
+  };
+
+  return fetchData();
+};
+
+describe('fetchWithAutoRetry', () => {
+  it('Should return first successful data when enough retries are allowed', async () => {
+    const fetcher = createFetcherMock([
+      { error: '504 Gateway Timeout' },
+      { error: '503 Service Unavailable' },
+      { error: '502 Bad Gateway' },
+      { error: '500 Internal Server Error' },
+      { data: 'Hello, world!' },
+      { data: 'Yandex' },
+    ]);
+
+    const result = await fetchWithAutoRetry(fetcher, 5);
+    assert.equal(result, 'Hello, world!');
+  });
+
+  it('Should throw last error if retries are not enough', async () => {
+    const fetcher = createFetcherMock([
+      { error: '504 Gateway Timeout' },
+      { error: '503 Service Unavailable' },
+      { error: '502 Bad Gateway' },
+      { error: '500 Internal Server Error' },
+      { data: 'Hello, world!' },
+      { data: 'Yandex' },
+    ]);
+
+    try {
+      await fetchWithAutoRetry(fetcher, 3);
+      assert.fail('Expected function to throw');
+    } catch (error: any) {
+      assert.equal(error, '500 Internal Server Error');
+    }
+  });
+
+  it('Should return first success immediately if it appears early', async () => {
+    const fetcher = createFetcherMock([
+      { error: '504 Gateway Timeout' },
+      { data: 'Hello, world!' },
+      { error: '503 Service Unavailable' },
+      { error: '502 Bad Gateway' },
+      { error: '500 Internal Server Error' },
+      { data: 'Yandex' },
+    ]);
+
+    const result = await fetchWithAutoRetry(fetcher, 5);
+    assert.equal(result, 'Hello, world!');
+  });
+});
