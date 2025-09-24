@@ -1,4 +1,4 @@
-import { describe, it } from 'node:test';
+import { beforeEach, describe, it } from 'node:test';
 import { strict as assert } from 'node:assert';
 
 /**
@@ -1478,5 +1478,89 @@ describe('fetchWithAutoRetry', () => {
 
     const result = await fetchWithAutoRetry(fetcher, 5);
     assert.equal(result, 'Hello, world!');
+  });
+});
+
+/**
+ * memoizeFn
+ * Реализуйте функцию memoize, которая принимает функцию fn и возвращает её мемоизированную версию. Мемоизированная функция никогда не должна вызывать fn дважды для одного и того же набора аргументов — она запоминает результат первого вызова и возвращает его из кеша для всех последующих.
+ *
+ * Два объекта с разной ссылкой, но одним и тем же набором полей и значений считаются одинаковыми.
+ *
+ * Формат ввода
+ * Вы должны экспортировать функцию memoize, которая в качестве аргумента принимает функцию fn.
+ *
+ * Функция fn в качестве аргументов может принимать примитивы (строки, числа, булевы значения), массивы и объекты.
+ * Значения, которые нельзя сериализовать через JSON.stringify (например, функции, undefined, Symbol, BigInt, циклические ссылки и т. п.), передаваться не будут.
+ * Два массива с одинаковыми элементами, расположенными в разном порядке, считаются разными. Например, [1, 2] и [2, 1] — это разные массивы.
+ * В тестах не будет случаев, когда объекты отличаются только порядком полей. Например, объекты {a: 1, b: 2} и {b: 2, a: 1} не будут встречаться в рамках одного и того же теста.
+ * Формат вывода
+ * Вывод тестирующей системы будет содержать блоки с информацией о каждом вызове memoizedFn: переданные аргументы, вернувшийся результат и флаг Invoked, который указывает, была ли вызвана исходная функция.
+ */
+
+const memoizeFn = <Args extends unknown[], Return extends unknown>(fn: (...args: Args) => Return) => {
+  // Ваше решение
+  const cache: Record<string, Return> = {};
+
+  return (...args: Args) => {
+    const key = args.map((arg) => JSON.stringify(arg)).join('');
+
+    if (key in cache) {
+      return cache[key];
+    }
+
+    const value = fn(...args);
+    cache[key] = value;
+
+    return value;
+  };
+};
+
+describe('memoizeFn', () => {
+  let calls: Array<{ args: string; result: number; invoked: boolean }>;
+  let cache: Record<string, number>;
+
+  beforeEach(() => {
+    calls = [];
+    cache = {};
+  });
+
+  const stringifyArgs = (args: unknown[]) => args.map((arg) => JSON.stringify(arg)).join('');
+
+  it('Should be deep equal', () => {
+    function fn(a: number, b: number) {
+      const result = a + b;
+
+      const key = stringifyArgs([a, b]);
+      cache[key] = result;
+
+      return result;
+    }
+
+    const memoizedFn = memoizeFn(fn);
+
+    const wrapper = (...args: Parameters<typeof fn>) => {
+      const key = stringifyArgs(args);
+
+      if (key in cache) {
+        calls.push({
+          args: stringifyArgs(args),
+          result: memoizedFn(...args),
+          invoked: false,
+        });
+      }
+
+      calls.push({
+        args: stringifyArgs(args),
+        result: memoizedFn(...args),
+        invoked: true,
+      });
+    };
+
+    wrapper(1, 2);
+    wrapper(1, 2);
+
+    assert.deepEqual(calls[0], { args: stringifyArgs([1, 2]), result: 3, invoked: true });
+    assert.deepEqual(calls[1], { args: stringifyArgs([1, 2]), result: 3, invoked: false });
   });
 });
