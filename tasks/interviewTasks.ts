@@ -1304,3 +1304,61 @@ describe('splitWordsBySeparator', () => {
     assert.deepEqual(result, ['a', 'b']);
   });
 });
+
+/**
+ * addTwoPromises
+ * еализуйте функцию addTwoPromises, которая принимает на вход два объекта Promise с типом number и возвращает Promise с их суммой.
+ *
+ * Формат ввода
+ * Функция addTwoPromises принимает два аргумента:
+ *
+ * promise1: Promise<number> — первый Promise, который разрешается в число
+ * promise2: Promise<number> — второй Promise, который разрешается в число
+ * Оба аргумента являются объектами Promise, которые должны разрешаться (resolve) или отклоняться (reject) с числовыми значениями.
+ *
+ * Формат вывода
+ * Функция возвращает Promise<number>, который разрешается в сумму значений двух входных Promise. Если Promise отклоняется, его значение все равно используется в сумме.
+ */
+
+const addTwoPromises = async function (promise1: Promise<number>, promise2: Promise<number>) {
+  // Ваше решение
+  const promises = [promise1, promise2];
+  const nums: number[] = [];
+
+  return new Promise((resolve) => {
+    promises.forEach((promise) => {
+      Promise.resolve(promise)
+        .then((num) => num)
+        .catch((num) => num)
+        .then((num) => {
+          nums.push(num);
+
+          if (nums.length === promises.length) {
+            resolve(
+              nums.reduce((acc, num) => {
+                acc += num;
+                return acc;
+              }, 0),
+            );
+          }
+        });
+    });
+  });
+};
+
+describe('addTwoPromises', () => {
+  it('Should be equal', async () => {
+    const result = await addTwoPromises(Promise.resolve(2), Promise.resolve(2));
+    assert.equal(result, 4);
+  });
+
+  it('Should be equal', async () => {
+    const result = await addTwoPromises(Promise.reject(3), Promise.resolve(2));
+    assert.equal(result, 5);
+  });
+
+  it('Should be equal', async () => {
+    const result = await addTwoPromises(Promise.reject(5), Promise.reject(7));
+    assert.equal(result, 12);
+  });
+});
