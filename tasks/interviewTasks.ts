@@ -1617,3 +1617,62 @@ describe('Test Curry', () => {
     assert.equal(curry(sum)(1)(2)(3), 6);
   });
 });
+
+/**
+ * isMonotonic
+ */
+const isMonotonic = (nums: number[]) => {
+  if (nums.length <= 1) {
+    return true;
+  }
+
+  let nonIncreasing = true;
+  let nonDecreasing = true;
+
+  for (let i = 1; i < nums.length; i++) {
+    const currNum = nums[i];
+    const prevNum = nums[i - 1];
+
+    if (prevNum > currNum) {
+      nonIncreasing = false;
+    } else if (prevNum < currNum) {
+      nonDecreasing = false;
+    }
+  }
+
+  return nonIncreasing || nonDecreasing;
+};
+
+describe('test isMonotonic', () => {
+  it('should be equal', () => {
+    assert.equal(isMonotonic([]), true);
+  });
+
+  it('should be equal', () => {
+    assert.equal(isMonotonic([1]), true);
+  });
+
+  it('should be equal', () => {
+    assert.equal(isMonotonic([1, 2, 2, 5]), true);
+  });
+
+  it('should be equal', () => {
+    assert.equal(isMonotonic([1, 1, 2, 2, 5]), true);
+  });
+
+  it('should be equal', () => {
+    assert.equal(isMonotonic([3, 3, 2, 1]), true);
+  });
+
+  it('should be equal', () => {
+    assert.equal(isMonotonic([1, 3, 2]), false);
+  });
+
+  it('should be equal', () => {
+    assert.equal(isMonotonic([1, 3, 3, 3, 4, 5, 1]), false);
+  });
+
+  it('should be equal', () => {
+    assert.equal(isMonotonic([6, 6, 5, 4, 3, 4]), false);
+  });
+});
