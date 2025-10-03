@@ -1783,3 +1783,84 @@ describe('compressNums test', () => {
     assert.equal(compressNums([]), '');
   });
 });
+
+/**
+ * throttle
+ * Напишите функцию throttle(fn, delay, ctx) - "тормозилку", которая возвращает обертку,
+ * вызывающую fn не чаще, чем раз в delay миллисекунд.
+ * В качестве контекста исполнения используется ctx.
+ * Первый вызов fn всегда должен быть синхронным.
+ * Если игнорируемый вызов оказался последним, то он должен выполнтся.
+ *
+ * Прример для delay === 100
+ * . - вызовы throttledFn
+ * ! - вызовы fn
+ *
+ * .................
+ * !          !         !
+ * 0ms       100ms     200ms
+ * .     .         .
+ * !          !         !
+ * 0ms       100ms     200ms
+ */
+
+// @ts-ignore
+function throttle(fn, delay, ctx) {
+  /**
+   * leading + trailing: первый сразу, последний в конце тоже гарантирован.
+   */
+  // @ts-ignore
+  let timerId = null;
+  // @ts-ignore
+  let lastArgs = null;
+
+  const startTimer = () => {
+    timerId = setTimeout(() => {
+      timerId = null;
+
+      // @ts-ignore
+      if (lastArgs) {
+        fn.apply(ctx, lastArgs);
+        startTimer();
+        lastArgs = null;
+      }
+    }, delay);
+  };
+
+  // @ts-ignore
+  return (...args) => {
+    // @ts-ignore
+    if (timerId === null) {
+      fn.apply(ctx, args);
+      startTimer();
+
+      return;
+    }
+
+    lastArgs = args;
+  };
+}
+
+function test() {
+  const start = Date.now();
+
+  function log(text: string) {
+    const msPassed = Date.now() - start;
+    // @ts-ignore
+    console.log(`${msPassed}: ${this.name} logged ${text}`);
+  }
+
+  const throttledFn = throttle(log, 100, { name: 'me' });
+
+  setTimeout(() => throttledFn('m'), 0);
+  setTimeout(() => throttledFn('mo'), 22);
+  setTimeout(() => throttledFn('mos'), 33);
+  setTimeout(() => throttledFn('mosc'), 150);
+  setTimeout(() => throttledFn('moscow'), 400);
+  //   0ms: me logged m
+  // 100ms: me logged mos
+  // 200ms: me logged mosc
+  // 400ms: me logged moscow
+}
+
+test();
