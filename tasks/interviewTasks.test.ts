@@ -1,5 +1,4 @@
-import { beforeEach, describe, it } from 'node:test';
-import { strict as assert } from 'node:assert';
+import { vi, expect, beforeEach, afterEach, describe, it, assert } from 'vitest';
 
 /**
  * Find value by keys sequence
@@ -893,12 +892,12 @@ describe('Test my promise any', () => {
   it('get first resolved non promise value', () => {
     const { log, writeLog } = getLogAndWriteLog();
 
-    const values = [1, 2, 3];
+    const values = ['1', '2', '3'];
 
     runMyPromiseAny(values, writeLog);
 
     setTimeout(() => {
-      assert.deepEqual(log, [1]);
+      assert.deepEqual(log, ['1']);
     }, ORDERS.FIRST);
   });
 });
@@ -984,12 +983,12 @@ describe('Test my promise all', () => {
   it('all resolved non promises', () => {
     const { log, writeLog } = getLogAndWriteLog();
 
-    const values = [1, 2, 3];
+    const values = ['1', '2', '3'];
 
     runMyPromiseAll(values, writeLog);
 
     setTimeout(() => {
-      assert.deepEqual(log, [1, 2, 3]);
+      assert.deepEqual(log, ['1', '2', '3']);
     }, ORDERS.FIRST);
   });
 });
@@ -1086,15 +1085,15 @@ describe('Test my promise allSettled', () => {
   it('all resolved non promises', () => {
     const { log, writeLog } = getLogAndWriteLog();
 
-    const values = [1, 2, 3];
+    const values = ['1', '2', '3'];
 
     runMyPromiseAllSettled(values, writeLog);
 
     setTimeout(() => {
       assert.deepEqual(log, [
-        { status: 'fulfilled', value: 1 },
-        { status: 'fulfilled', value: 2 },
-        { status: 'fulfilled', value: 3 },
+        { status: 'fulfilled', value: '1' },
+        { status: 'fulfilled', value: '2' },
+        { status: 'fulfilled', value: '3' },
       ]);
     }, ORDERS.FIRST);
   });
@@ -1167,12 +1166,12 @@ describe('Test my promise race', () => {
   it('all resolved non promises', () => {
     const { log, writeLog } = getLogAndWriteLog();
 
-    const values = [1, 2, 3];
+    const values = ['1', '2', '3'];
 
     runMyPromiseRace(values, writeLog);
 
     setTimeout(() => {
-      assert.deepEqual(log, [1]);
+      assert.deepEqual(log, ['1']);
     }, ORDERS.FIRST);
   });
 });
@@ -1841,26 +1840,40 @@ function throttle(fn, delay, ctx) {
   };
 }
 
-function test() {
-  const start = Date.now();
+describe('throttle', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
 
-  function log(text: string) {
-    const msPassed = Date.now() - start;
-    // @ts-ignore
-    console.log(`${msPassed}: ${this.name} logged ${text}`);
-  }
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
-  const throttledFn = throttle(log, 100, { name: 'me' });
+  it('should be equal', () => {
+    const logs: string[] = [];
+    const start = Date.now();
 
-  setTimeout(() => throttledFn('m'), 0);
-  setTimeout(() => throttledFn('mo'), 22);
-  setTimeout(() => throttledFn('mos'), 33);
-  setTimeout(() => throttledFn('mosc'), 150);
-  setTimeout(() => throttledFn('moscow'), 400);
-  //   0ms: me logged m
-  // 100ms: me logged mos
-  // 200ms: me logged mosc
-  // 400ms: me logged moscow
-}
+    function log(text: string) {
+      const msPassed = Date.now() - start;
+      // @ts-ignore
+      logs.push(`${msPassed}: ${this.name} logged ${text}`);
+    }
 
-test();
+    const throttled = throttle(log, 100, { name: 'me' });
+
+    setTimeout(() => throttled('m'), 0);
+    setTimeout(() => throttled('mo'), 22);
+    setTimeout(() => throttled('mos'), 33);
+    setTimeout(() => throttled('mosc'), 150);
+    setTimeout(() => throttled('moscow'), 400);
+
+    vi.runAllTimers();
+
+    expect(logs).toEqual([
+      expect.stringMatching(/0: me logged m/),
+      expect.stringMatching(/100: me logged mos/),
+      expect.stringMatching(/200: me logged mosc/),
+      expect.stringMatching(/400: me logged moscow/),
+    ]);
+  });
+});

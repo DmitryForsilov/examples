@@ -1,5 +1,4 @@
-import { describe, it, beforeEach } from 'node:test';
-import { strict as assert } from 'node:assert';
+import { assert, beforeEach, describe, it } from 'vitest';
 
 /**
  * Collect all nodes in non-binary tree
