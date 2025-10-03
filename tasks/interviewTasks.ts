@@ -1676,3 +1676,110 @@ describe('test isMonotonic', () => {
     assert.equal(isMonotonic([6, 6, 5, 4, 3, 4]), false);
   });
 });
+
+/**
+ * compressNums
+ * Дан список целых чисел, повторяющихся элементов в списке нет.
+ * Нужно преобразовать это множество в строку, сворачивая соседние по числовому ряду числа в диапазоны.
+ */
+
+const compressNums = (list: number[]) => {
+  /**
+   * Variant 1
+   */
+  // if (list.length === 1) {
+  //   return list.join('')
+  // }
+  //
+  // const sortedList = list.toSorted((a, b) => a - b)
+  //
+  // const ranges = []
+  // let rangeStart = null
+  // let rangeEnd = null
+  //
+  // for (let i = 1; i < sortedList.length; i++) {
+  //   const prevNum = sortedList[i - 1];
+  //   const currNum = sortedList[i];
+  //
+  //   if (rangeStart === null) {
+  //     rangeStart = prevNum
+  //   }
+  //
+  //   if (prevNum + 1 !== currNum) {
+  //     const item = rangeEnd ? `${rangeStart}-${rangeEnd}` : `${rangeStart}`
+  //     ranges.push(item)
+  //
+  //     rangeStart = null
+  //     rangeEnd = null
+  //
+  //     if (i === sortedList.length - 1) {
+  //       ranges.push(currNum)
+  //     }
+  //   } else {
+  //     rangeEnd = currNum
+  //
+  //
+  //     if (i === sortedList.length - 1) {
+  //       const item = rangeEnd ? `${rangeStart}-${rangeEnd}` : `${rangeStart}`
+  //       ranges.push(item)
+  //     }
+  //   }
+  // }
+  //
+  // return ranges.join(',')
+
+  /**
+   * Variant 1
+   */
+  const sortedList = list.toSorted((a, b) => a - b);
+  // 0 1 2 3 4 5 8 9 11
+
+  const ranges = sortedList.reduce(
+    (acc, currNum) => {
+      const currRange = acc[acc.length - 1];
+
+      if (currRange && currRange[1] + 1 === currNum) {
+        currRange[1] = currNum;
+      } else {
+        acc.push([currNum, currNum]);
+      }
+
+      return acc;
+    },
+    [] as Array<[number, number]>,
+  );
+
+  return ranges
+    .map(([start, end]) => {
+      if (start === end) {
+        return start;
+      }
+
+      return `${start}-${end}`;
+    })
+    .join(',');
+};
+
+describe('compressNums test', () => {
+  it('should be equal', () => {
+    assert.equal(compressNums([1, 4, 5, 2, 3, 9, 8, 11, 0]), '0-5,8-9,11');
+  });
+  it('should be equal', () => {
+    assert.equal(compressNums([1, 4, 3, 2]), '1-4');
+  });
+  it('should be equal', () => {
+    assert.equal(compressNums([1, 4]), '1,4');
+  });
+  it('should be equal', () => {
+    assert.equal(compressNums([1, 5, 9]), '1,5,9');
+  });
+  it('should be equal', () => {
+    assert.equal(compressNums([1, 2]), '1-2');
+  });
+  it('should be equal', () => {
+    assert.equal(compressNums([1]), '1');
+  });
+  it('should be equal', () => {
+    assert.equal(compressNums([]), '');
+  });
+});
