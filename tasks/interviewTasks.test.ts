@@ -1974,3 +1974,139 @@ describe('test digitPermutation', () => {
     assert.deepEqual(digitPermutation([111111112, 222222221]), [[111111112], [222222221]]);
   });
 });
+
+/**
+ * getNodes
+ * Дана древовидная структура сделующего формата:
+ * const tree = {
+ *   type: 'nested',
+ *   children: [
+ *     { type: 'added', value: 42 },
+ *     { type: 'nested',
+ *       children: [
+ *         { type: 'added', value: 43 },
+ *       ]
+ *     },
+ *     { type: 'added', value: 44 },
+ *     ...
+ *   ]
+ * }
+ * Необходимо написать функцию getNodes(tree, type), которая возвращает все ноды в порядке следования, соответствующие переданному типу.
+ * Глубина вложенности любая.
+ * Пример:
+ * const addedItems = getNodes(tree, 'added')
+ *
+ * // результат:
+ * [
+ *   { type: 'added', value: 42 },
+ *   { type: 'added', value: 43 },
+ *   { type: 'added', value: 44 },
+ *   ...
+ * ]
+ */
+type TNodeType = 'added' | 'nested';
+type TTree = { type: 'added'; value: number } | { type: 'nested'; children: TTree[] };
+const getNodes = (tree: TTree, type: TNodeType) => {
+  // variant 1 (recursive)
+  // const result: TTree[] = [];
+  //
+  // const traverse = (currentNode: TTree) => {
+  //   if (currentNode.type === type) {
+  //     result.push(currentNode)
+  //   }
+  //
+  //   if ('children' in currentNode) {
+  //     currentNode.children.forEach(traverse)
+  //   }
+  // }
+  //
+  // traverse(tree)
+  //
+  // return result
+  // Time complexity = O(n)
+  // Space complexity = O(h) - h - глубина дерева (глубина стека вызовов)
+  // и проблема с переполнением стека
+
+  // variant 2 (stack)
+  const result: TTree[] = [];
+  const nodesStack = [tree];
+
+  while (nodesStack.length) {
+    const currentNode = nodesStack.pop();
+
+    if (currentNode) {
+      if (currentNode.type === type) {
+        result.push(currentNode);
+      }
+
+      if ('children' in currentNode) {
+        for (let i = currentNode.children.length - 1; i >= 0; i--) {
+          nodesStack.push(currentNode.children[i]);
+        }
+      }
+    }
+  }
+
+  return result;
+  // Time complexity = O(n) - n - все узлы дерева
+  // Space complexity = O(n) - h - глубина дерева, n - все ноды
+  // и проблема с переполнением стека
+};
+
+describe('test getNodes', () => {
+  const tree: TTree = {
+    type: 'nested',
+    children: [
+      { type: 'added', value: 42 },
+      {
+        type: 'nested',
+        children: [
+          { type: 'added', value: 43 },
+          { type: 'added', value: 44 },
+        ],
+      },
+      { type: 'added', value: 45 },
+      { type: 'added', value: 46 },
+    ],
+  };
+
+  it('should be deep equal', () => {
+    const expected: TTree[] = [
+      { type: 'added', value: 42 },
+      { type: 'added', value: 43 },
+      { type: 'added', value: 44 },
+      { type: 'added', value: 45 },
+      { type: 'added', value: 46 },
+    ];
+
+    assert.deepEqual(getNodes(tree, 'added'), expected);
+  });
+  it('should be deep equal', () => {
+    const expected: TTree[] = [
+      {
+        type: 'nested',
+        children: [
+          { type: 'added', value: 42 },
+          {
+            type: 'nested',
+            children: [
+              { type: 'added', value: 43 },
+              { type: 'added', value: 44 },
+            ],
+          },
+          { type: 'added', value: 45 },
+          { type: 'added', value: 46 },
+        ],
+      },
+      {
+        type: 'nested',
+        children: [
+          { type: 'added', value: 43 },
+          { type: 'added', value: 44 },
+        ],
+      },
+    ];
+
+    assert.deepEqual(getNodes(tree, 'nested'), expected);
+  });
+});
