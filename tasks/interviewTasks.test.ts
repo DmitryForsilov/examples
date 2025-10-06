@@ -1728,10 +1728,9 @@ const compressNums = (list: number[]) => {
   // return ranges.join(',')
 
   /**
-   * Variant 1
+   * Variant 2
    */
   const sortedList = list.toSorted((a, b) => a - b);
-  // 0 1 2 3 4 5 8 9 11
 
   const ranges = sortedList.reduce(
     (acc, currNum) => {
@@ -1803,21 +1802,17 @@ describe('compressNums test', () => {
  * 0ms       100ms     200ms
  */
 
-// @ts-ignore
-function throttle(fn, delay, ctx) {
+const throttle = <Args extends unknown[]>(fn: (...args: Args) => unknown, delay: number, ctx: unknown) => {
   /**
    * leading + trailing: первый сразу, последний в конце тоже гарантирован.
    */
-  // @ts-ignore
-  let timerId = null;
-  // @ts-ignore
-  let lastArgs = null;
+  let timerId: ReturnType<typeof setTimeout> | null = null;
+  let lastArgs: Args | null = null;
 
   const startTimer = () => {
     timerId = setTimeout(() => {
       timerId = null;
 
-      // @ts-ignore
       if (lastArgs) {
         fn.apply(ctx, lastArgs);
         startTimer();
@@ -1826,9 +1821,7 @@ function throttle(fn, delay, ctx) {
     }, delay);
   };
 
-  // @ts-ignore
-  return (...args) => {
-    // @ts-ignore
+  return (...args: Args) => {
     if (timerId === null) {
       fn.apply(ctx, args);
       startTimer();
@@ -1838,7 +1831,7 @@ function throttle(fn, delay, ctx) {
 
     lastArgs = args;
   };
-}
+};
 
 describe('throttle', () => {
   beforeEach(() => {
@@ -1853,9 +1846,9 @@ describe('throttle', () => {
     const logs: string[] = [];
     const start = Date.now();
 
-    function log(text: string) {
+    function log(this: any, text: string) {
       const msPassed = Date.now() - start;
-      // @ts-ignore
+
       logs.push(`${msPassed}: ${this.name} logged ${text}`);
     }
 
