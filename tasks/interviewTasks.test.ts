@@ -1870,3 +1870,79 @@ describe('throttle', () => {
     ]);
   });
 });
+
+/**
+ * digitPermutation
+ * Дан массив целых неотрицательных чисел, нужно сгруппировать друг с другом числа,
+ * которые можно получить путем перестановки цифр их составляющих,
+ * нули при этом игнорируются, т.к. нет числа 011.
+ * Решение должно быть максимально эффективно по времени и по памяти.
+ */
+
+const digitPermutation = (nums: number[]) => {
+  // variant 1
+  // const groupsByNumKeys: Record<string, number[]> = {};
+  //
+  // nums.forEach((num) => {
+  //   const numKey = num
+  //     .toString()
+  //     .split('')
+  //     .filter((digit) => digit !== '0')
+  //     .sort((a, b) => Number(a) - Number(b))
+  //     .join('');
+  //
+  //   if (groupsByNumKeys[numKey] !== undefined) {
+  //     groupsByNumKeys[numKey].push(num);
+  //   } else {
+  //     groupsByNumKeys[numKey] = [num];
+  //   }
+  // });
+  //
+  // return Object.values(groupsByNumKeys);
+  // Time: O(n * (k + k * log(k))) в лучшем случае, в худшем O(n * (k + k^2)): n - длина исходного массива, k - количество цифр в числе
+  // Space: O(n + 3k): n - длина массива, k - количество цифр в числе
+
+  // variant 2
+  const groupsByNumKeys: Record<string, number[]> = {};
+
+  nums.forEach((num) => {
+    const numsFrequencies = new Array(10).fill(0);
+    const numStr = num.toString();
+
+    for (let i = 0; i < numStr.length; i++) {
+      if (numStr[i] !== '0') {
+        const digit = Number(numStr[i]);
+
+        numsFrequencies[digit] += 1;
+      }
+    }
+
+    const numKey = numsFrequencies.join('');
+    if (groupsByNumKeys[numKey] !== undefined) {
+      groupsByNumKeys[numKey].push(num);
+    } else {
+      groupsByNumKeys[numKey] = [num];
+    }
+  });
+
+  return Object.values(groupsByNumKeys);
+  // Time: O(n * k): n - длина исходного массива, k - количество цифр в числе
+  // Space: O(n + 10): n - длина массива, k - количество цифр в числе
+};
+
+describe('test digitPermutation', () => {
+  it('should be deep equal', () => {
+    assert.deepEqual(digitPermutation([1230, 99, 23001, 123, 111, 300021, 101010, 9000009, 9]), [
+      [1230, 23001, 123, 300021],
+      [99, 9000009],
+      [111, 101010],
+      [9],
+    ]);
+  });
+  it('should be deep equal', () => {
+    assert.deepEqual(digitPermutation([11, 22]), [[11], [22]]);
+  });
+  it('should be deep equal', () => {
+    assert.deepEqual(digitPermutation([111111112, 222222221]), [[111111112], [222222221]]);
+  });
+});
