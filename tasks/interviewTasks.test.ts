@@ -1806,6 +1806,34 @@ const throttle = <Args extends unknown[]>(fn: (...args: Args) => unknown, delay:
   /**
    * leading + trailing: первый сразу, последний в конце тоже гарантирован.
    */
+  // variant 1
+  // let isCallBlocked = false;
+  // let lastArgs: Args | null = null
+  //
+  // const startTimer = () => {
+  //   setTimeout(() => {
+  //     isCallBlocked = false
+  //
+  //     if (lastArgs) {
+  //       fn.apply(ctx, lastArgs);
+  //       lastArgs = null
+  //       isCallBlocked = true;
+  //       startTimer();
+  //     }
+  //   }, delay);
+  // }
+  //
+  // return (...args: Args) => {
+  //   if (isCallBlocked) {
+  //     lastArgs = args;
+  //   } else {
+  //     fn.apply(ctx, args);
+  //     isCallBlocked = true;
+  //     startTimer();
+  //   }
+  // }
+
+  // variant 2
   let timerId: ReturnType<typeof setTimeout> | null = null;
   let lastArgs: Args | null = null;
 
