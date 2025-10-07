@@ -2006,51 +2006,90 @@ describe('test digitPermutation', () => {
  */
 type TNodeType = 'added' | 'nested';
 type TTree = { type: 'added'; value: number } | { type: 'nested'; children: TTree[] };
-const getNodes = (tree: TTree, type: TNodeType) => {
-  // variant 1 (recursive)
-  // const result: TTree[] = [];
-  //
-  // const traverse = (currentNode: TTree) => {
-  //   if (currentNode.type === type) {
-  //     result.push(currentNode)
-  //   }
-  //
-  //   if ('children' in currentNode) {
-  //     currentNode.children.forEach(traverse)
-  //   }
-  // }
-  //
-  // traverse(tree)
-  //
-  // return result
-  // Time complexity = O(n)
-  // Space complexity = O(h) - h - глубина дерева (глубина стека вызовов)
-  // и проблема с переполнением стека
+const getNodes = (tree: TTree, type: TNodeType, searchType: 'DFS recursive' | 'DFS by stack' | 'BFS by queue') => {
+  const searchDFSByRecursive = () => {
+    const result: TTree[] = [];
 
-  // variant 2 (stack)
-  const result: TTree[] = [];
-  const nodesStack = [tree];
-
-  while (nodesStack.length) {
-    const currentNode = nodesStack.pop();
-
-    if (currentNode) {
+    const traverse = (currentNode: TTree) => {
       if (currentNode.type === type) {
         result.push(currentNode);
       }
 
       if ('children' in currentNode) {
-        for (let i = currentNode.children.length - 1; i >= 0; i--) {
-          nodesStack.push(currentNode.children[i]);
+        currentNode.children.forEach(traverse);
+      }
+    };
+
+    traverse(tree);
+
+    return result;
+    // Time complexity = O(n)
+    // Space complexity = O(h) - h - глубина дерева (глубина стека вызовов)
+    // и проблема с переполнением стека
+  };
+  const searchDFSByStack = () => {
+    const result: TTree[] = [];
+    const nodesStack = [tree];
+
+    while (nodesStack.length) {
+      const currentNode = nodesStack.pop();
+
+      if (currentNode) {
+        if (currentNode.type === type) {
+          result.push(currentNode);
+        }
+
+        if ('children' in currentNode) {
+          for (let i = currentNode.children.length - 1; i >= 0; i--) {
+            nodesStack.push(currentNode.children[i]);
+          }
         }
       }
     }
-  }
 
-  return result;
-  // Time complexity = O(n) - n - все узлы дерева
-  // Space complexity = O(n) - h - глубина дерева, n - все ноды
-  // и проблема с переполнением стека
+    return result;
+    // Time complexity = O(n) - n - все узлы дерева
+    // Space complexity = O(n) - h - глубина дерева, n - все ноды
+    // без проблем с переполнением стека
+  };
+
+  const searchBFSByQueue = () => {
+    const result: TTree[] = [];
+    const nodesQueue = [tree];
+
+    while (nodesQueue.length) {
+      const currentNode = nodesQueue.shift();
+
+      if (currentNode) {
+        if (currentNode.type === type) {
+          result.push(currentNode);
+        }
+
+        if ('children' in currentNode) {
+          currentNode.children.forEach((childNode) => {
+            nodesQueue.push(childNode);
+          });
+        }
+      }
+    }
+
+    return result;
+    // Time complexity = O(n) - n - все узлы дерева
+    // Space complexity = O(n) - h - глубина дерева, n - все ноды
+    // без проблем с переполнением стека
+  };
+
+  switch (searchType) {
+    case 'DFS recursive': {
+      return searchDFSByRecursive();
+    }
+    case 'DFS by stack': {
+      return searchDFSByStack();
+    }
+    case 'BFS by queue': {
+      return searchBFSByQueue();
+    }
+  }
 };
 
 describe('test getNodes', () => {
@@ -2070,43 +2109,132 @@ describe('test getNodes', () => {
     ],
   };
 
-  it('should be deep equal', () => {
-    const expected: TTree[] = [
-      { type: 'added', value: 42 },
-      { type: 'added', value: 43 },
-      { type: 'added', value: 44 },
-      { type: 'added', value: 45 },
-      { type: 'added', value: 46 },
-    ];
+  describe('DFS recursive', () => {
+    it('get added nodes', () => {
+      const expected: TTree[] = [
+        { type: 'added', value: 42 },
+        { type: 'added', value: 43 },
+        { type: 'added', value: 44 },
+        { type: 'added', value: 45 },
+        { type: 'added', value: 46 },
+      ];
 
-    assert.deepEqual(getNodes(tree, 'added'), expected);
+      assert.deepEqual(getNodes(tree, 'added', 'DFS recursive'), expected);
+    });
+
+    it('get nested nodes', () => {
+      const expected: TTree[] = [
+        {
+          type: 'nested',
+          children: [
+            { type: 'added', value: 42 },
+            {
+              type: 'nested',
+              children: [
+                { type: 'added', value: 43 },
+                { type: 'added', value: 44 },
+              ],
+            },
+            { type: 'added', value: 45 },
+            { type: 'added', value: 46 },
+          ],
+        },
+        {
+          type: 'nested',
+          children: [
+            { type: 'added', value: 43 },
+            { type: 'added', value: 44 },
+          ],
+        },
+      ];
+
+      assert.deepEqual(getNodes(tree, 'nested', 'DFS recursive'), expected);
+    });
   });
-  it('should be deep equal', () => {
-    const expected: TTree[] = [
-      {
-        type: 'nested',
-        children: [
-          { type: 'added', value: 42 },
-          {
-            type: 'nested',
-            children: [
-              { type: 'added', value: 43 },
-              { type: 'added', value: 44 },
-            ],
-          },
-          { type: 'added', value: 45 },
-          { type: 'added', value: 46 },
-        ],
-      },
-      {
-        type: 'nested',
-        children: [
-          { type: 'added', value: 43 },
-          { type: 'added', value: 44 },
-        ],
-      },
-    ];
 
-    assert.deepEqual(getNodes(tree, 'nested'), expected);
+  describe('DFS by stack', () => {
+    it('get added nodes', () => {
+      const expected: TTree[] = [
+        { type: 'added', value: 42 },
+        { type: 'added', value: 43 },
+        { type: 'added', value: 44 },
+        { type: 'added', value: 45 },
+        { type: 'added', value: 46 },
+      ];
+
+      assert.deepEqual(getNodes(tree, 'added', 'DFS by stack'), expected);
+    });
+
+    it('get nested nodes', () => {
+      const expected: TTree[] = [
+        {
+          type: 'nested',
+          children: [
+            { type: 'added', value: 42 },
+            {
+              type: 'nested',
+              children: [
+                { type: 'added', value: 43 },
+                { type: 'added', value: 44 },
+              ],
+            },
+            { type: 'added', value: 45 },
+            { type: 'added', value: 46 },
+          ],
+        },
+        {
+          type: 'nested',
+          children: [
+            { type: 'added', value: 43 },
+            { type: 'added', value: 44 },
+          ],
+        },
+      ];
+
+      assert.deepEqual(getNodes(tree, 'nested', 'DFS by stack'), expected);
+    });
+  });
+
+  describe('BFS by queue', () => {
+    it('get added nodes', () => {
+      const expected: TTree[] = [
+        { type: 'added', value: 42 },
+        { type: 'added', value: 45 },
+        { type: 'added', value: 46 },
+        { type: 'added', value: 43 },
+        { type: 'added', value: 44 },
+      ];
+
+      assert.deepEqual(getNodes(tree, 'added', 'BFS by queue'), expected);
+    });
+
+    it('get nested nodes', () => {
+      const expected: TTree[] = [
+        {
+          type: 'nested',
+          children: [
+            { type: 'added', value: 42 },
+            {
+              type: 'nested',
+              children: [
+                { type: 'added', value: 43 },
+                { type: 'added', value: 44 },
+              ],
+            },
+            { type: 'added', value: 45 },
+            { type: 'added', value: 46 },
+          ],
+        },
+        {
+          type: 'nested',
+          children: [
+            { type: 'added', value: 43 },
+            { type: 'added', value: 44 },
+          ],
+        },
+      ];
+
+      assert.deepEqual(getNodes(tree, 'nested', 'BFS by queue'), expected);
+    });
   });
 });
