@@ -2238,3 +2238,160 @@ describe('test getNodes', () => {
     });
   });
 });
+
+/**
+ * messagesProcessor
+ * Есть обработчик события, в который приходят сообщения, у каждого сообщения есть id.
+ * id сообщений начинаются с 1 и увеличиваются на 1. Необходимо вывести сообщения последовательно,
+ * учитывая что обработчик события вызывается асинхронно и сообщения могут приходить в разном порядке
+ */
+const messagesProcessor = (log: (logMsg: string) => void) => {
+  const messagesByIds = new Map<number, string>();
+  let expectedId = 1;
+
+  const print = () => {
+    while (messagesByIds.has(expectedId)) {
+      const message = messagesByIds.get(expectedId);
+
+      log(`ID: ${expectedId}; MESSAGE: ${message}`);
+      messagesByIds.delete(expectedId);
+      expectedId += 1;
+    }
+  };
+
+  return (id: number, msg: string) => {
+    messagesByIds.set(id, msg);
+    print();
+  };
+};
+
+describe('test messagesProcessor', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('should be deep equal with asc input by time', () => {
+    const logs: string[] = [];
+    const log = (logMsg: string) => {
+      logs.push(logMsg);
+    };
+
+    const process = messagesProcessor(log);
+
+    setTimeout(() => process(5, 'Сообщение 5'), 500);
+    setTimeout(() => process(1, 'Сообщение 1'), 100);
+    setTimeout(() => process(3, 'Сообщение 3'), 300);
+    setTimeout(() => process(2, 'Сообщение 2'), 200);
+    setTimeout(() => process(4, 'Сообщение 4'), 400);
+
+    setTimeout(() => process(10, 'Сообщение 10 с большой задержкой'), 5000);
+    setTimeout(() => process(6, 'Сообщение 6'), 600);
+
+    setTimeout(() => {
+      process(7, 'Сообщение 7');
+      process(8, 'Сообщение 8');
+      process(9, 'Сообщение 9');
+    }, 700);
+
+    vi.runAllTimers();
+
+    const expectedLogs = [
+      'ID: 1; MESSAGE: Сообщение 1',
+      'ID: 2; MESSAGE: Сообщение 2',
+      'ID: 3; MESSAGE: Сообщение 3',
+      'ID: 4; MESSAGE: Сообщение 4',
+      'ID: 5; MESSAGE: Сообщение 5',
+      'ID: 6; MESSAGE: Сообщение 6',
+      'ID: 7; MESSAGE: Сообщение 7',
+      'ID: 8; MESSAGE: Сообщение 8',
+      'ID: 9; MESSAGE: Сообщение 9',
+      'ID: 10; MESSAGE: Сообщение 10 с большой задержкой',
+    ];
+
+    expect(logs).toEqual(expectedLogs);
+  });
+  it('should be deep equal with not asc input by time', () => {
+    const logs: string[] = [];
+    const log = (logMsg: string) => {
+      logs.push(logMsg);
+    };
+
+    const process = messagesProcessor(log);
+
+    setTimeout(() => process(5, 'Сообщение 5'), 100);
+    setTimeout(() => process(1, 'Сообщение 1'), 200);
+    setTimeout(() => process(3, 'Сообщение 3'), 300);
+    setTimeout(() => process(2, 'Сообщение 2'), 400);
+    setTimeout(() => process(4, 'Сообщение 4'), 500);
+
+    setTimeout(() => {
+      process(7, 'Сообщение 7');
+      process(8, 'Сообщение 8');
+      process(9, 'Сообщение 9');
+    }, 600);
+
+    setTimeout(() => process(10, 'Сообщение 10 с большой задержкой'), 5000);
+    setTimeout(() => process(6, 'Сообщение 6'), 700);
+
+    vi.runAllTimers();
+
+    const expectedLogs = [
+      'ID: 1; MESSAGE: Сообщение 1',
+      'ID: 2; MESSAGE: Сообщение 2',
+      'ID: 3; MESSAGE: Сообщение 3',
+      'ID: 4; MESSAGE: Сообщение 4',
+      'ID: 5; MESSAGE: Сообщение 5',
+      'ID: 6; MESSAGE: Сообщение 6',
+      'ID: 7; MESSAGE: Сообщение 7',
+      'ID: 8; MESSAGE: Сообщение 8',
+      'ID: 9; MESSAGE: Сообщение 9',
+      'ID: 10; MESSAGE: Сообщение 10 с большой задержкой',
+    ];
+
+    expect(logs).toEqual(expectedLogs);
+  });
+  it('should be deep equal with big delays on first and fourth messages', () => {
+    const logs: string[] = [];
+    const log = (logMsg: string) => {
+      logs.push(logMsg);
+    };
+
+    const process = messagesProcessor(log);
+
+    setTimeout(() => process(5, 'Сообщение 5'), 100);
+    setTimeout(() => process(1, 'Сообщение 1 с большой задержкой'), 5000);
+    setTimeout(() => process(3, 'Сообщение 3'), 300);
+    setTimeout(() => process(2, 'Сообщение 2'), 400);
+    setTimeout(() => process(4, 'Сообщение 4 с большой задержкой'), 4000);
+
+    setTimeout(() => {
+      process(7, 'Сообщение 7');
+      process(8, 'Сообщение 8');
+      process(9, 'Сообщение 9');
+    }, 600);
+
+    setTimeout(() => process(10, 'Сообщение 10'), 500);
+    setTimeout(() => process(6, 'Сообщение 6'), 700);
+
+    vi.runAllTimers();
+
+    const expectedLogs = [
+      'ID: 1; MESSAGE: Сообщение 1 с большой задержкой',
+      'ID: 2; MESSAGE: Сообщение 2',
+      'ID: 3; MESSAGE: Сообщение 3',
+      'ID: 4; MESSAGE: Сообщение 4 с большой задержкой',
+      'ID: 5; MESSAGE: Сообщение 5',
+      'ID: 6; MESSAGE: Сообщение 6',
+      'ID: 7; MESSAGE: Сообщение 7',
+      'ID: 8; MESSAGE: Сообщение 8',
+      'ID: 9; MESSAGE: Сообщение 9',
+      'ID: 10; MESSAGE: Сообщение 10',
+    ];
+
+    expect(logs).toEqual(expectedLogs);
+  });
+});
