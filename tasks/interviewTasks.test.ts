@@ -2395,3 +2395,124 @@ describe('test messagesProcessor', () => {
     expect(logs).toEqual(expectedLogs);
   });
 });
+
+/**
+ * printFolders
+ * Вывести в консоль структуру папок, с сохранением порядка и вложенности.
+ * Глубина может быть любой (то есть рекурсию использовать нельзя).
+ * root
+ *   folder2
+ *     file1
+ *     file2
+ *   file3
+ */
+type TFolder = { name: string; children?: TFolder[] };
+const printFolders = (folder: TFolder, indentChar: string) => {
+  const nodesStack: { folder: TFolder; depth: number }[] = [{ folder, depth: 0 }];
+  let result = '';
+
+  while (nodesStack.length) {
+    const currentNode = nodesStack.pop();
+
+    if (currentNode) {
+      const { folder, depth } = currentNode;
+      const indent = indentChar.repeat(depth);
+      result += `\n${indent}${currentNode.folder.name}`;
+
+      if ('children' in folder && folder.children) {
+        for (let i = folder.children.length - 1; i >= 0; i--) {
+          nodesStack.push({ folder: folder.children[i], depth: depth + 1 });
+        }
+      }
+    }
+  }
+
+  return result;
+};
+
+describe('test printFolders', () => {
+  const INDENT = '--';
+
+  it('should be equal', () => {
+    const folder: TFolder = {
+      name: 'root',
+      children: [
+        {
+          name: 'folder2',
+          children: [
+            {
+              name: 'file1',
+            },
+            {
+              name: 'file2',
+            },
+          ],
+        },
+        {
+          name: 'file3',
+        },
+      ],
+    };
+
+    const expected = [
+      `\nroot`,
+      `${INDENT}folder2`,
+      `${INDENT}${INDENT}file1`,
+      `${INDENT}${INDENT}file2`,
+      `${INDENT}file3`,
+    ].join('\n');
+
+    const received = printFolders(folder, INDENT);
+    expect(received).toEqual(expected);
+  });
+  it('should be equal', () => {
+    const folder: TFolder = {
+      name: 'root',
+      children: [
+        {
+          name: 'folder2',
+          children: [
+            {
+              name: 'file1',
+            },
+            {
+              name: 'file2',
+            },
+          ],
+        },
+        {
+          name: 'file3',
+        },
+        {
+          name: 'folder3',
+          children: [
+            {
+              name: 'folder4',
+              children: [
+                {
+                  name: 'file4',
+                },
+              ],
+            },
+          ],
+        },
+        { name: 'file5' },
+      ],
+    };
+
+    const expected = [
+      `\nroot`,
+      `${INDENT}folder2`,
+      `${INDENT}${INDENT}file1`,
+      `${INDENT}${INDENT}file2`,
+      `${INDENT}file3`,
+      `${INDENT}folder3`,
+      `${INDENT}${INDENT}folder4`,
+      `${INDENT}${INDENT}${INDENT}file4`,
+      `${INDENT}file5`,
+    ].join('\n');
+
+    const received = printFolders(folder, INDENT);
+    expect(received).toEqual(expected);
+  });
+});
